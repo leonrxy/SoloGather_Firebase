@@ -62,7 +62,7 @@ class _LoginState extends State<Login> {
         statuslogin = false;
         showprogress = false; //don't show progress indicator
         error = true;
-        errormsg = "Harap isi LeoNews ID/Email dan Password.";
+        errormsg = "Harap isi Username/Email dan Password.";
       });
     } else {
       setState(() {
@@ -91,12 +91,17 @@ class _LoginState extends State<Login> {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(
-          'Masuk ke LeoNews ID',
+          'Masuk ke SoloGather',
           style: TextStyle(
               fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: ListView(
         children: [
@@ -110,7 +115,7 @@ class _LoginState extends State<Login> {
                 ),
                 SizedBox(height: 25),
                 Text(
-                  'Login LeoNews',
+                  'Login SoloGather',
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -121,7 +126,7 @@ class _LoginState extends State<Login> {
                   width: 400,
                   alignment: Alignment.center,
                   child: Text(
-                    'Login dengan LeoNews ID untuk menggunakan layanan-layanan dari LeoNews',
+                    'Login ke SoloGather untuk menggunakan layanan-layanan dari LeoNews',
                     style: TextStyle(fontSize: 14),
                     textAlign: TextAlign.center,
                   ),
@@ -133,7 +138,7 @@ class _LoginState extends State<Login> {
                   child: TextFormField(
                     controller: _username,
                     decoration: InputDecoration(
-                      labelText: 'LeoNews ID/Email',
+                      labelText: 'Username/Email',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
@@ -204,7 +209,7 @@ class _LoginState extends State<Login> {
                             Navigator.pushNamed(context, '/register');
                           },
                           child: Text(
-                            'Daftar LeoNews ID',
+                            'Daftar Sekarang',
                             style: TextStyle(
                               decoration: TextDecoration.underline,
                               fontSize: 14,

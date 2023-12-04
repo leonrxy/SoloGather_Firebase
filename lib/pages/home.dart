@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:sologather/get_data/getapi.dart';
+import 'package:sologather/get_data/get_events.dart';
+import 'package:sologather/get_data/get_banner.dart';
 import 'package:sologather/widgets/shimmer.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -11,10 +13,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Events> listEvent = [];
+  List<AppBanner> listBanner = [];
   bool isLoading = true;
   bool isSearch = false;
 
   Repo repo = Repo();
+  RepoBanner repoBanner = RepoBanner();
 
   Widget appLogo = Container(
     padding: const EdgeInsets.all(4.0),
@@ -56,7 +60,7 @@ class _HomeState extends State<Home> {
         isLoading = true;
       });
       List<Events> event = await repo.getData('events');
-      // List<Events> dataTerbaru = await repo.getData('terbaru');
+      List<AppBanner> banner = await repoBanner.getData();
       // List<Events> dataTerpopuler = await repo.getData('terpopuler');
       // List<Events> dataRekomendasi = await repo.getData('rekomendasi');
       //print('Length of data received: ${data.length}');
@@ -64,6 +68,8 @@ class _HomeState extends State<Home> {
         // Pastikan widget masih ada sebelum memanggil setState
         setState(() {
           listEvent = event;
+          listBanner = banner;
+          print('List of Banners: ' + listBanner[1].foto);
           // beritaTerbaru = dataTerbaru;
           // beritaTerpopuler = dataTerpopuler;
           // beritaRekomendasi = dataRekomendasi;
@@ -81,8 +87,6 @@ class _HomeState extends State<Home> {
       });
     }
   }
-
-
 
   final List<Map<String, dynamic>> categories = [
     {'name': 'Peta Wisata', 'icon': Icons.maps_home_work},
@@ -114,9 +118,7 @@ class _HomeState extends State<Home> {
                       size: 28,
                     ),
                     title: TextField(
-                      onChanged: (query) {
-                        
-                      },
+                      onChanged: (query) {},
                       decoration: InputDecoration(
                         hintText: 'Cari Berita',
                         hintStyle: TextStyle(
@@ -157,18 +159,37 @@ class _HomeState extends State<Home> {
       body: ListView(
         padding: const EdgeInsets.all(4),
         children: <Widget>[
-          Container(
-            padding: const EdgeInsets.all(10),
-            height: 150,
-            color: Colors.grey[100],
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                'assets/images/header.jpg',
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
+          (isLoading || listBanner.length == 0)
+              ? AppShimmer(width: 140, height: 200)
+              : Container(
+                  padding: const EdgeInsets.all(10),
+                  height: 150,
+                  color: Colors.grey[100],
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: listBanner.isNotEmpty
+                        ? ImageSlideshow(
+                            width: double.infinity,
+                            height: 150,
+                            initialPage: 0,
+                            indicatorColor: Colors.blue,
+                            indicatorBackgroundColor:
+                                const Color.fromRGBO(158, 158, 158, 1),
+                            children: List.generate(listBanner.length, (index) {
+                              return Image.network(
+                                listBanner[index].foto,
+                                fit: BoxFit.fill,
+                              );
+                            }),
+                            onPageChanged: (value) {
+                              print('Page changed: $value');
+                            },
+                            autoPlayInterval: 4000,
+                            isLoop: true,
+                          )
+                        : Container(),
+                  ),
+                ),
           Container(
             margin: EdgeInsets.only(top: 10, bottom: 10, left: 10, right: 10),
             child: ClipRRect(

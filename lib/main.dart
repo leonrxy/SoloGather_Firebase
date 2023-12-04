@@ -5,6 +5,8 @@ import 'package:sologather/pages/profil.dart';
 import 'package:sologather/pages/event.dart';
 import 'package:sologather/pages/wisata.dart';
 import 'package:sologather/pages/berita.dart';
+import 'package:sologather/pages/login.dart';
+import 'package:sologather/pages/register.dart';
 
 void main() => runApp(const MyApp());
 
@@ -35,6 +37,16 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/home': (context) => NavigationBar(),
         '/splash': (context) => SplashScreenKu(),
+        '/profil': (context) => Profil(),
+        '/event': (context) => PageEvent(),
+        '/wisata': (context) => Wisata(),
+        '/berita': (context) => Berita(),
+        '/login': (context) => Login(),
+        '/register': (context) => Register(),
+        '/favoritku': (context) => Profil(),
+        '/pengaturan': (context) => Profil(),
+        '/tentang': (context) => Profil(),
+        '/kritik': (context) => Profil(),
       },
     );
   }
