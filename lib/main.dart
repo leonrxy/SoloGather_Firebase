@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sologather/splashscreen.dart';
-import 'package:sologather/home.dart';
-import 'package:sologather/profil.dart';
-import 'package:sologather/event.dart';
-import 'package:sologather/wisata.dart';
-import 'package:sologather/berita.dart';
+import 'package:sologather/pages/home.dart';
+import 'package:sologather/pages/profil.dart';
+import 'package:sologather/pages/event.dart';
+import 'package:sologather/pages/wisata.dart';
+import 'package:sologather/pages/berita.dart';
 
 void main() => runApp(const MyApp());
 

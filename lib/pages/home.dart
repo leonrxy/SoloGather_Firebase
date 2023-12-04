@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:sologather/getapi.dart';
+import 'package:sologather/get_data/getapi.dart';
 import 'package:sologather/widgets/shimmer.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 

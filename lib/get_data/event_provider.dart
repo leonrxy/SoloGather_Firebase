@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sologather/getapi.dart';
+import 'package:sologather/get_data/getapi.dart';
 
 class EventProvider with ChangeNotifier {
   List<Events> _listEvent = [];
