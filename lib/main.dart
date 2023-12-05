@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sologather/pages/kritiksaran.dart';
+import 'package:sologather/pages/pengaturan.dart';
+import 'package:sologather/pages/tentang.dart';
 import 'package:sologather/splashscreen.dart';
 import 'package:sologather/pages/home.dart';
 import 'package:sologather/pages/profil.dart';
@@ -7,6 +10,7 @@ import 'package:sologather/pages/wisata.dart';
 import 'package:sologather/pages/berita.dart';
 import 'package:sologather/pages/login.dart';
 import 'package:sologather/pages/register.dart';
+import 'package:sologather/pages/favoritku.dart';
 
 void main() => runApp(const MyApp());
 
@@ -43,10 +47,10 @@ class _MyAppState extends State<MyApp> {
         '/berita': (context) => Berita(),
         '/login': (context) => Login(),
         '/register': (context) => Register(),
-        '/favoritku': (context) => Profil(),
-        '/pengaturan': (context) => Profil(),
-        '/tentang': (context) => Profil(),
-        '/kritik': (context) => Profil(),
+        '/favoritku': (context) => Favoritku(),
+        '/pengaturan': (context) => Pengaturan(),
+        '/tentang': (context) => Tentang(),
+        '/kritik': (context) => KritikSaran(),
       },
     );
   }
@@ -59,10 +63,22 @@ class NavigationBar extends StatefulWidget {
   State<NavigationBar> createState() => _NavigationBarState();
 }
 
-class _NavigationBarState extends State<NavigationBar> {
+class _NavigationBarState extends State<NavigationBar>
+    with TickerProviderStateMixin {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
   void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  void _changeNavigationIndex(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -71,7 +87,13 @@ class _NavigationBarState extends State<NavigationBar> {
   @override
   Widget build(BuildContext context) {
     List<Widget> _widgetOptions = <Widget>[
-      Home(),
+      Home(
+        goPageEvent: () {
+          setState(() {
+            _selectedIndex = 1;
+          });
+        },
+      ),
       PageEvent(),
       Wisata(),
       Berita(),
@@ -79,8 +101,10 @@ class _NavigationBarState extends State<NavigationBar> {
     ];
 
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: IndexedStack(
+        //controller: _tabController,
+        children: _widgetOptions,
+        index: _selectedIndex,
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

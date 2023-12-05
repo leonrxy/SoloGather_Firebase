@@ -1,5 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:math';
 import 'package:sologather/get_data/get_events.dart';
 import 'package:sologather/get_data/get_banner.dart';
 import 'package:sologather/widgets/shimmer.dart';
@@ -7,7 +8,9 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 
 class Home extends StatefulWidget {
-  @override
+  final VoidCallback goPageEvent;
+
+  Home({required this.goPageEvent});
   State<Home> createState() => _HomeState();
 }
 
@@ -61,18 +64,11 @@ class _HomeState extends State<Home> {
       });
       List<Events> event = await repo.getData('events');
       List<AppBanner> banner = await repoBanner.getData();
-      // List<Events> dataTerpopuler = await repo.getData('terpopuler');
-      // List<Events> dataRekomendasi = await repo.getData('rekomendasi');
-      //print('Length of data received: ${data.length}');
       if (mounted) {
         // Pastikan widget masih ada sebelum memanggil setState
         setState(() {
           listEvent = event;
           listBanner = banner;
-          print('List of Banners: ' + listBanner[1].foto);
-          // beritaTerbaru = dataTerbaru;
-          // beritaTerpopuler = dataTerpopuler;
-          // beritaRekomendasi = dataRekomendasi;
           if (listEvent.length == 0) {
             isLoading = true;
           } else {
@@ -120,7 +116,7 @@ class _HomeState extends State<Home> {
                     title: TextField(
                       onChanged: (query) {},
                       decoration: InputDecoration(
-                        hintText: 'Cari Berita',
+                        hintText: 'Cari Event',
                         hintStyle: TextStyle(
                           color: Colors.black,
                           fontSize: 18,
@@ -250,17 +246,18 @@ class _HomeState extends State<Home> {
                 ),
               ),
               Container(
-                  margin: EdgeInsets.only(right: 8),
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Lihat Semua',
-                      style: TextStyle(
-                          color: Colors.blue[600],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ))
+                margin: EdgeInsets.only(right: 8),
+                child: TextButton(
+                  onPressed: widget.goPageEvent,
+                  child: Text(
+                    'Lihat Semua',
+                    style: TextStyle(
+                        color: Colors.blue[600],
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
             ],
           ),
           Container(
@@ -271,10 +268,10 @@ class _HomeState extends State<Home> {
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
-                    itemCount: listEvent.length,
+                    itemCount: min(listEvent.length, 7),
                     itemBuilder: (BuildContext context, int index) {
                       return Container(
-                        margin: EdgeInsets.only(left: 6, right: 6),
+                        margin: EdgeInsets.only(left: 4, right: 4),
                         width: 140,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(15),
@@ -414,48 +411,6 @@ class _HomeState extends State<Home> {
                   ))
             ],
           ),
-          // Container(
-          //   alignment: AlignmentDirectional.center,
-          //   margin: EdgeInsets.only(bottom: 4, top: 0),
-          //   child: SizedBox(
-          //     width: 300,
-          //     height: 40,
-          //     child: ElevatedButton(
-          //       onPressed: () {},
-          //       child: Text(
-          //         'Selengkapnya',
-          //         style: TextStyle(
-          //             color: Colors.yellow[900],
-          //             fontSize: 16,
-          //             fontWeight: FontWeight.bold),
-          //       ),
-          //       style: TextButton.styleFrom(
-          //         backgroundColor: Colors.grey[300],
-          //         shape: RoundedRectangleBorder(
-          //           borderRadius: BorderRadius.circular(20),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // Container(
-          //   height: 50,
-          //   color: Colors.amber[500],
-          //   child: const Center(
-          //       child: Text(
-          //     'Berita Terbaru',
-          //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          //   )),
-          // ),
-          // Container(
-          //   height: 50,
-          //   color: Colors.orange[300],
-          //   child: const Center(
-          //       child: Text(
-          //     'Rekomendasi Untuk Anda',
-          //     style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          //   )),
-          // ),
         ],
       ),
     ));
