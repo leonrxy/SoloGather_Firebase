@@ -12,8 +12,11 @@ class Events {
   final String tempat;
   final String deskripsi;
   final String gmaps;
+  
+  double latitude = 0.0;
+  double longitude = 0.0;
 
-  const Events({
+  Events({
     required this.id,
     required this.nama,
     required this.foto,
@@ -27,7 +30,7 @@ class Events {
   });
 
   factory Events.fromJson(Map<String, dynamic> json) {
-    return Events(
+    final event = Events(
       id: json['id'],
       nama: json['nama'],
       foto: json['foto'],
@@ -39,6 +42,24 @@ class Events {
       deskripsi: json['deskripsi'],
       gmaps: json['gmaps'],
     );
+
+    event.extractLatLngFromMapsURL();
+
+    return event;
+  }
+  void extractLatLngFromMapsURL() {
+    try {
+      final uri = Uri.parse(gmaps);
+      final queryParameters = uri.queryParameters;
+      final latLng = queryParameters['q']?.split(',');
+
+      if (latLng != null && latLng.length == 2) {
+        latitude = double.tryParse(latLng[0]) ?? 0.0;
+        longitude = double.tryParse(latLng[1]) ?? 0.0;
+      }
+    } catch (e) {
+      print('Error extracting latitude and longitude: $e');
+    }
   }
 }
 

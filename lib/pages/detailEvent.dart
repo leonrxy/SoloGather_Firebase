@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sologather/get_data/get_events.dart';
-import 'package:sologather/widgets/shimmer.dart';
+//import 'package:sologather/widgets/shimmer.dart';
 import 'package:intl/intl.dart';
+//import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PageDetailEvent extends StatefulWidget {
   const PageDetailEvent({super.key, required this.event});
@@ -16,6 +17,8 @@ class _PageDetailEventState extends State<PageDetailEvent> {
   List<Events> listEvent = [];
   bool isLoading = true;
   Repo repo = Repo();
+
+  //GoogleMapController? _controller;
 
   @override
   void initState() {
@@ -67,6 +70,7 @@ class _PageDetailEventState extends State<PageDetailEvent> {
         physics: BouncingScrollPhysics(),
         children: <Widget>[
           Container(
+            color: Colors.white,
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,6 +223,58 @@ class _PageDetailEventState extends State<PageDetailEvent> {
               ),
             ),
           ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding:
+                      EdgeInsets.only(top: 10, bottom: 4, left: 15, right: 15),
+                  child: Text(
+                    'Deskripsi',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding:
+                      EdgeInsets.only(top: 10, bottom: 4, left: 15, right: 15),
+                  child: Text(
+                    widget.event.deskripsi,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Container(
+          //   height: 200,
+          //   child: GoogleMap(
+          //     onMapCreated: (controller) {
+          //       _controller = controller;
+          //     },
+          //     initialCameraPosition: CameraPosition(
+          //       target: LatLng(widget.event.latitude, widget.event.longitude),
+          //       zoom: 15,
+          //     ),
+          //     markers: {
+          //       Marker(
+          //         markerId: MarkerId('event_location'),
+          //         position:
+          //             LatLng(widget.event.latitude, widget.event.longitude),
+          //       ),
+          //     },
+          //   ),
+          // ),
         ],
       ),
     );
