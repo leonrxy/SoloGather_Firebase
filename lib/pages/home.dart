@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:math';
 import 'package:sologather/get_data/get_events.dart';
 import 'package:sologather/get_data/get_banner.dart';
+import 'package:sologather/pages/detailEvent.dart';
 import 'package:sologather/widgets/shimmer.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
@@ -44,17 +45,6 @@ class _HomeState extends State<Home> {
 
   Future<void> init() async {
     await getData();
-
-    // Listen for network status changes
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.mobile ||
-          result == ConnectivityResult.wifi) {
-        // Internet connection is available, fetch data
-        getData();
-      } else {
-        // Internet connection is not available, show error message
-      }
-    });
   }
 
   getData() async {
@@ -94,6 +84,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    List<Future<void>> precacheFutures = List.generate(
+      listBanner.length,
+      (index) => precacheImage(NetworkImage(listBanner[index].foto), context),
+    );
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
@@ -270,114 +264,128 @@ class _HomeState extends State<Home> {
                     shrinkWrap: true,
                     itemCount: min(listEvent.length, 7),
                     itemBuilder: (BuildContext context, int index) {
-                      return Container(
-                        margin: EdgeInsets.only(left: 4, right: 4),
-                        width: 140,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Container(
-                            color: Colors.white,
-                            child: Column(
-                              children: [
-                                Container(
-                                  height: 120,
-                                  margin: EdgeInsets.only(bottom: 3),
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image:
-                                          NetworkImage(listEvent[index].foto),
-                                      fit: BoxFit.cover,
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PageDetailEvent(event: listEvent[index]),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(left: 4, right: 4),
+                          width: 140,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Container(
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 120,
+                                    margin: EdgeInsets.only(bottom: 3),
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image:
+                                            NetworkImage(listEvent[index].foto),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(left: 4, right: 4),
-                                  child: Text(
-                                    listEvent[index].nama,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
+                                  Container(
+                                    padding: EdgeInsets.only(left: 4, right: 4),
+                                    child: Text(
+                                      listEvent[index].nama,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(
-                                      left: 5, right: 5, top: 2),
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.monetization_on_outlined,
-                                        size: 16,
-                                        color: Colors.blue[600],
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        listEvent[index].biaya,
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 12,
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 2),
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.monetization_on_outlined,
+                                          size: 16,
+                                          color: Colors.blue[600],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(
-                                      left: 5, right: 5, top: 2),
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.date_range_outlined,
-                                        size: 16,
-                                        color: Colors.blue[600],
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        listEvent[index].tanggal,
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 12,
+                                        SizedBox(
+                                          width: 5,
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: EdgeInsets.only(
-                                      left: 5, right: 5, top: 2),
-                                  alignment: Alignment.centerLeft,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Icon(
-                                        Icons.access_time_outlined,
-                                        size: 16,
-                                        color: Colors.blue[600],
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        listEvent[index].jam_mulai,
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 12,
+                                        Text(
+                                          listEvent[index].biaya,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 2),
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.date_range_outlined,
+                                          size: 16,
+                                          color: Colors.blue[600],
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          listEvent[index].tanggal,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 2),
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.access_time_outlined,
+                                          size: 16,
+                                          color: Colors.blue[600],
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          listEvent[index].jam_mulai,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),

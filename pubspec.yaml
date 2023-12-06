@@ -7,6 +7,7 @@ environment:
   sdk: ">=3.2.2 <4.0.0"
 
 dependencies:
+  cached_network_image: ^3.3.0
   carousel_slider: ^4.2.1
   connectivity_plus: ^5.0.2
   flutter:
@@ -14,6 +15,7 @@ dependencies:
   flutter_image_slideshow: ^0.1.6
   http: ^1.1.2
   intl: ^0.18.1
+  provider: ^6.1.1
   shimmer: ^3.0.0
 
 dev_dependencies:
