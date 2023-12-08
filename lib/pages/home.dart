@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
   );
   Widget SearchBar = Icon(
     Icons.search_rounded,
-    color: Colors.orange,
+    color: Colors.blue,
   );
 
   @override
@@ -77,11 +77,10 @@ class _HomeState extends State<Home> {
   }
 
   final List<Map<String, dynamic>> categories = [
-    {'name': 'Peta Wisata', 'icon': Icons.maps_home_work},
-    {'name': 'Destinasi', 'icon': Icons.location_city},
-    {'name': 'Informasi', 'icon': Icons.info},
-    {'name': 'Event', 'icon': Icons.event},
-    {'name': 'Kritik & Saran', 'icon': Icons.feedback},
+    {'name': 'Peta Wisata', 'icon': Icons.maps_home_work, 'route': '/peta'},
+    {'name': 'Destinasi', 'icon': Icons.location_city, 'route': '/wisata'},
+    {'name': 'Informasi', 'icon': Icons.info, 'route': '/informasi'},
+    {'name': 'Kritik & Saran', 'icon': Icons.feedback, 'route': '/kritik'},
   ];
 
   String formatTime(String time) {
@@ -202,36 +201,50 @@ class _HomeState extends State<Home> {
                   spacing: 8.0, // Jarak antar item
                   runSpacing: 8.0, // Jarak antar baris
                   children: List.generate(categories.length, (index) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Material(
-                            elevation: 4,
-                            //shape: CircleBorder(),
-                            clipBehavior: Clip.antiAlias,
-                            color: Colors.transparent,
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              padding: EdgeInsets.all(8),
-                              decoration: BoxDecoration(
-                                //shape: BoxShape.circle,
-                                color: Colors.grey[200],
+                    return Container(
+                        color: Colors.transparent,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                Future.delayed(
+                                    const Duration(milliseconds: 150), () {
+                                  Navigator.pushNamed(
+                                    context,
+                                    categories[index]['route'],
+                                  );
+                                });
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Material(
+                                  elevation: 4,
+                                  //shape: CircleBorder(),
+                                  clipBehavior: Clip.antiAlias,
+                                  color: Colors.transparent,
+                                  child: Container(
+                                    width: 50,
+                                    height: 50,
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      //shape: BoxShape.circle,
+                                      color: Colors.grey[200],
+                                    ),
+                                    child: Icon(categories[index]['icon'],
+                                        size: 30),
+                                  ),
+                                ),
                               ),
-                              child: Icon(categories[index]['icon'], size: 30),
                             ),
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(categories[index]['name'],
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            )),
-                      ],
-                    );
+                            SizedBox(height: 8),
+                            Text(categories[index]['name'],
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ],
+                        ));
                   }),
                 ),
               ),
@@ -452,7 +465,7 @@ class _HomeState extends State<Home> {
                         },
                         child: Container(
                           margin: EdgeInsets.only(left: 4, right: 4),
-                          width: 140,
+                          width: 150,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15),
                             child: Container(
@@ -460,7 +473,7 @@ class _HomeState extends State<Home> {
                               child: Column(
                                 children: [
                                   Container(
-                                    height: 120,
+                                    height: 110,
                                     margin: EdgeInsets.only(bottom: 3),
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
@@ -536,7 +549,7 @@ class _HomeState extends State<Home> {
                                   ),
                                   Container(
                                     padding: EdgeInsets.only(
-                                        left: 5, right: 5, top: 2),
+                                        left: 5, right: 5, top: 2, bottom: 5),
                                     alignment: Alignment.centerLeft,
                                     child: Row(
                                       mainAxisAlignment:

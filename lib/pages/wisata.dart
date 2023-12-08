@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sologather/get_data/get_events.dart';
-import 'package:sologather/pages/detailEvent.dart';
+import 'package:sologather/get_data/get_wisata.dart';
+import 'package:sologather/pages/detailWisata.dart';
 import 'package:sologather/widgets/shimmer.dart';
 
 class Wisata extends StatefulWidget {
@@ -11,7 +11,7 @@ class Wisata extends StatefulWidget {
 }
 
 class _WisataState extends State<Wisata> {
-  List<Events> listEvent = [];
+  List<DataWisata> listWisata = [];
   bool isLoading = true;
   Repo repo = Repo();
 
@@ -27,12 +27,12 @@ class _WisataState extends State<Wisata> {
 
   Future<void> getData() async {
     try {
-      List<Events> event = await repo.getData('events');
+      List<DataWisata> event = await repo.getData();
 
       if (mounted) {
         setState(() {
-          listEvent = event;
-          if (listEvent.length == 0) {
+          listWisata = event;
+          if (listWisata.length == 0) {
             isLoading = true;
           } else {
             isLoading = false;
@@ -64,7 +64,7 @@ class _WisataState extends State<Wisata> {
       backgroundColor: Colors.grey[200],
       body: ListView(
         children: <Widget>[
-          (isLoading || listEvent.length == 0)
+          (isLoading || listWisata.length == 0)
               ? AppShimmer(width: 140, height: 200)
               : Container(
                   padding: EdgeInsets.all(8.0),
@@ -72,7 +72,7 @@ class _WisataState extends State<Wisata> {
                     child: ListView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
-                      itemCount: listEvent.length,
+                      itemCount: listWisata.length,
                       itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () {
@@ -80,7 +80,7 @@ class _WisataState extends State<Wisata> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    PageDetailEvent(event: listEvent[index]),
+                                    PageDetailWisata(wisata: listWisata[index]),
                               ),
                             );
                           },
@@ -97,7 +97,7 @@ class _WisataState extends State<Wisata> {
                                       child: ClipRRect(
                                         borderRadius: BorderRadius.circular(12),
                                         child: Image.network(
-                                          listEvent[index].foto,
+                                          listWisata[index].foto,
                                           fit: BoxFit.fill,
                                           width: 140,
                                         ),
@@ -114,7 +114,7 @@ class _WisataState extends State<Wisata> {
                                             margin: EdgeInsets.fromLTRB(
                                                 10, 5, 10, 0),
                                             child: Text(
-                                              listEvent[index].nama,
+                                              listWisata[index].nama,
                                               style: TextStyle(
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.bold),
@@ -140,7 +140,7 @@ class _WisataState extends State<Wisata> {
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  listEvent[index].biaya,
+                                                  listWisata[index].biaya,
                                                   style: TextStyle(
                                                     color: Colors.grey[600],
                                                     fontSize: 13,
@@ -166,7 +166,7 @@ class _WisataState extends State<Wisata> {
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  listEvent[index].tanggal,
+                                                  listWisata[index].telp,
                                                   style: TextStyle(
                                                     color: Colors.grey[600],
                                                     fontSize: 13,
@@ -192,7 +192,7 @@ class _WisataState extends State<Wisata> {
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  listEvent[index].jam_mulai,
+                                                  listWisata[index].jam_buka,
                                                   style: TextStyle(
                                                     color: Colors.grey[600],
                                                     fontSize: 13,
