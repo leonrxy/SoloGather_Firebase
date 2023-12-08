@@ -20,7 +20,7 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Register'),
-        backgroundColor: Colors.yellow[800],
+        backgroundColor: Colors.blue[500],
         centerTitle: true,
       ),
       body: SingleChildScrollView(
@@ -38,7 +38,7 @@ class _RegisterState extends State<Register> {
                 SizedBox(height: 16),
                 Center(
                   child: Text(
-                    'LeoNews ID',
+                    'SoloGather',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -50,7 +50,7 @@ class _RegisterState extends State<Register> {
                   width: 400,
                   alignment: Alignment.center,
                   child: Text(
-                    'Login dengan LeoNews ID untuk menggunakan layanan-layanan dari LeoNews',
+                    'Daftar SoloGather untuk menggunakan layanan-layanan dari SoloGather',
                     style: TextStyle(fontSize: 14),
                     textAlign: TextAlign.center,
                   ),
@@ -138,12 +138,12 @@ class _RegisterState extends State<Register> {
                   height: 38,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.orange[500],
+                      primary: Colors.blue[500],
                     ),
                     onPressed: () {
                       Navigator.pushNamed(context, '/register2');
                     },
-                    child: Text('Lanjutkan'),
+                    child: Text('Lanjutkan', style: TextStyle(color: Colors.white),),
                   ),
                 ),
                 SizedBox(height: 8),
@@ -151,7 +151,7 @@ class _RegisterState extends State<Register> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('Sudah memiliki akun LeoNews?'),
+                      Text('Sudah memiliki akun SoloGather?'),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(true),
                         child: Text(
@@ -226,7 +226,7 @@ class _RegisterState2 extends State<Register2> {
                   width: 400,
                   alignment: Alignment.center,
                   child: Text(
-                    'Login dengan LeoNews ID untuk menggunakan layanan-layanan dari LeoNews',
+                    'Login SoloGather untuk menggunakan layanan-layanan dari SoloGather',
                     style: TextStyle(fontSize: 14),
                     textAlign: TextAlign.center,
                   ),
@@ -338,7 +338,7 @@ class _RegisterState2 extends State<Register2> {
                   width: 400,
                   alignment: Alignment.center,
                   child: Text(
-                    'Dengan menekan tombol Daftar, Anda menyetujui Syarat & Ketentuan serta Kebijakan Privasi LeoNews',
+                    'Dengan menekan tombol Daftar, Anda menyetujui Syarat & Ketentuan serta Kebijakan Privasi SoloGather',
                     style: TextStyle(fontSize: 14),
                     textAlign: TextAlign.center,
                   ),

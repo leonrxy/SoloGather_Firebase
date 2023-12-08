@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sologather/pages/informasi.dart';
 import 'package:sologather/pages/kritiksaran.dart';
 import 'package:sologather/pages/pengaturan.dart';
+import 'package:sologather/pages/petaWisata.dart';
 import 'package:sologather/pages/tentang.dart';
 import 'package:sologather/splashscreen.dart';
 import 'package:sologather/pages/home.dart';
@@ -51,6 +53,8 @@ class _MyAppState extends State<MyApp> {
         '/pengaturan': (context) => Pengaturan(),
         '/tentang': (context) => Tentang(),
         '/kritik': (context) => KritikSaran(),
+        '/informasi': (context) => Informasi(),
+        '/peta': (context) => PetaWisata(),
       },
     );
   }

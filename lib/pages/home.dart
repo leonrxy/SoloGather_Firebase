@@ -452,12 +452,12 @@ class _HomeState extends State<Home> {
           Container(
             height: 200,
             margin: EdgeInsets.only(left: 8, right: 8, bottom: 10),
-            child: (isLoading || listEvent.length == 0)
+            child: (isLoading || listWisata.length == 0)
                 ? AppShimmer(width: 140, height: 200)
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
-                    itemCount: min(listEvent.length, 7),
+                    itemCount: min(listWisata.length, 7),
                     itemBuilder: (BuildContext context, int index) {
                       return InkWell(
                         onTap: () {

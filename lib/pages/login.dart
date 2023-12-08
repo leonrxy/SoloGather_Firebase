@@ -91,11 +91,11 @@ class _LoginState extends State<Login> {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        //centerTitle: true,
         title: Text(
-          'Masuk ke SoloGather',
+          'Login',
           style: TextStyle(
-              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
+              fontSize: 22, fontWeight: FontWeight.w500, color: Colors.black),
         ),
         backgroundColor: Colors.white,
         leading: IconButton(
@@ -126,7 +126,7 @@ class _LoginState extends State<Login> {
                   width: 400,
                   alignment: Alignment.center,
                   child: Text(
-                    'Login ke SoloGather untuk menggunakan layanan-layanan dari LeoNews',
+                    'Login ke SoloGather untuk menggunakan layanan-layanan dari SoloGather',
                     style: TextStyle(fontSize: 14),
                     textAlign: TextAlign.center,
                   ),
@@ -174,7 +174,7 @@ class _LoginState extends State<Login> {
                   height: 38,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.orange[500],
+                      primary: Colors.blue[500],
                     ),
                     onPressed: () {
                       setState(() {
@@ -195,7 +195,7 @@ class _LoginState extends State<Login> {
                           )
                         : Text(
                             "Masuk",
-                            style: TextStyle(fontSize: 18),
+                            style: TextStyle(fontSize: 18, color: Colors.white),
                           ),
                   ),
                 ),
@@ -273,7 +273,7 @@ class _LoginState extends State<Login> {
                         width: 400,
                         alignment: Alignment.center,
                         child: Text(
-                          'Dengan masuk atau mendaftar, Anda menyetujui Ketentuan Layanan dan Kebijakan Privasi LeoNews.',
+                          'Dengan masuk atau mendaftar, Anda menyetujui Ketentuan Layanan dan Kebijakan Privasi SoloGather.',
                           style: TextStyle(fontSize: 14),
                           textAlign: TextAlign.center, // add this line
                         ),
