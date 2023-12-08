@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sologather/get_data/get_events.dart';
-//import 'package:sologather/widgets/shimmer.dart';
 import 'package:intl/intl.dart';
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PageDetailEvent extends StatefulWidget {
   const PageDetailEvent({super.key, required this.event});
@@ -17,8 +15,6 @@ class _PageDetailEventState extends State<PageDetailEvent> {
   List<Events> listEvent = [];
   bool isLoading = true;
   Repo repo = Repo();
-
-  //GoogleMapController? _controller;
 
   @override
   void initState() {

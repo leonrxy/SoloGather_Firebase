@@ -20,8 +20,7 @@ class _SplashScreenKuState extends State<SplashScreenKu> {
           children: [
             Image.asset(
               'assets/images/logo.png',
-              width: 150,
-              height: 150,
+              width: 230,
             ),
             SizedBox(height: 20),
           ],

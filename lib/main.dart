@@ -93,10 +93,14 @@ class _NavigationBarState extends State<NavigationBar>
             _selectedIndex = 1;
           });
         },
+        goPageWisata: () {
+          setState(() {
+            _selectedIndex = 2;
+          });
+        },
       ),
       PageEvent(),
       Wisata(),
-      Berita(),
       Profil(),
     ];
 
@@ -113,16 +117,12 @@ class _NavigationBarState extends State<NavigationBar>
             label: 'Beranda',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.recommend),
+            icon: Icon(Icons.event_available_rounded),
             label: 'Event',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.category),
+            icon: Icon(Icons.location_city_rounded),
             label: 'Wisata',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Berita',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_2_rounded),
@@ -132,8 +132,8 @@ class _NavigationBarState extends State<NavigationBar>
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue[800],
         onTap: _onItemTapped,
-        selectedFontSize: 13.0,
-        unselectedFontSize: 13.0,
+        selectedFontSize: 14.0,
+        unselectedFontSize: 14.0,
         type: BottomNavigationBarType.fixed, // addded line
       ),
     );

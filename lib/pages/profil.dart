@@ -23,7 +23,7 @@ class Profil extends StatelessWidget {
           'Profil dan Lainnya',
           style: TextStyle(
             fontSize: 22,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w400,
             color: Colors.black,
           ),
         ),

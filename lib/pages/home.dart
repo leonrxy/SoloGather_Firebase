@@ -7,11 +7,13 @@ import 'package:sologather/pages/detailEvent.dart';
 import 'package:sologather/widgets/shimmer.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   final VoidCallback goPageEvent;
+  final VoidCallback goPageWisata;
 
-  Home({required this.goPageEvent});
+  Home({required this.goPageEvent, required this.goPageWisata});
   State<Home> createState() => _HomeState();
 }
 
@@ -82,6 +84,16 @@ class _HomeState extends State<Home> {
     {'name': 'Kritik & Saran', 'icon': Icons.feedback},
   ];
 
+  String formatTime(String time) {
+    // Parse the time string to DateTime
+    DateTime parsedTime = DateTime.parse("2023-01-01 " + time);
+
+    // Format the DateTime to the desired time format
+    String formattedTime = DateFormat.Hm().format(parsedTime);
+
+    return formattedTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Future<void>> precacheFutures = List.generate(
@@ -99,12 +111,12 @@ class _HomeState extends State<Home> {
                 if (isSearch) {
                   SearchBar = Icon(
                     Icons.cancel,
-                    color: Colors.orange,
+                    color: Colors.blue,
                   );
                   appLogo = ListTile(
                     leading: Icon(
                       Icons.search,
-                      color: Colors.orange,
+                      color: Colors.blue,
                       size: 28,
                     ),
                     title: TextField(
@@ -112,9 +124,10 @@ class _HomeState extends State<Home> {
                       decoration: InputDecoration(
                         hintText: 'Cari Event',
                         hintStyle: TextStyle(
-                          color: Colors.black,
+                          color: Colors.grey,
                           fontSize: 18,
-                          fontStyle: FontStyle.italic,
+                          fontStyle: FontStyle.normal,
+                          fontWeight: FontWeight.w400,
                         ),
                         border: InputBorder.none,
                       ),
@@ -126,7 +139,7 @@ class _HomeState extends State<Home> {
                 } else {
                   SearchBar = Icon(
                     Icons.search_rounded,
-                    color: Colors.orange,
+                    color: Colors.blue,
                   );
                   appLogo = Container(
                     padding: const EdgeInsets.all(4.0),
@@ -171,9 +184,6 @@ class _HomeState extends State<Home> {
                                 fit: BoxFit.fill,
                               );
                             }),
-                            onPageChanged: (value) {
-                              print('Page changed: $value');
-                            },
                             autoPlayInterval: 4000,
                             isLoop: true,
                           )
@@ -243,6 +253,172 @@ class _HomeState extends State<Home> {
                 margin: EdgeInsets.only(right: 8),
                 child: TextButton(
                   onPressed: widget.goPageEvent,
+                  child: Text(
+                    'Lihat Semua',
+                    style: TextStyle(
+                        color: Colors.blue[600],
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: 200,
+            margin: EdgeInsets.only(left: 8, right: 8, bottom: 10),
+            child: (isLoading || listEvent.length == 0)
+                ? AppShimmer(width: 140, height: 200)
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    shrinkWrap: true,
+                    itemCount: min(listEvent.length, 7),
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PageDetailEvent(event: listEvent[index]),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.only(left: 4, right: 4),
+                          width: 150,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: Container(
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    height: 110,
+                                    margin: EdgeInsets.only(bottom: 3),
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image:
+                                            NetworkImage(listEvent[index].foto),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(left: 4, right: 4),
+                                    child: Text(
+                                      listEvent[index].nama,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 2),
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.monetization_on_outlined,
+                                          size: 16,
+                                          color: Colors.blue[600],
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          listEvent[index].biaya,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 2),
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.date_range_outlined,
+                                          size: 16,
+                                          color: Colors.blue[600],
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          listEvent[index].tanggal,
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 2, bottom: 5),
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.access_time_outlined,
+                                          size: 16,
+                                          color: Colors.blue[600],
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          '${formatTime(listEvent[index].jam_mulai)} - ${formatTime(listEvent[index].jam_selesai)}',
+                                          style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: EdgeInsets.only(bottom: 4, top: 0, left: 8),
+                //height: 50,
+                color: Colors.transparent,
+                child: const Text(
+                  'Rekomendasi Wisata',
+                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(right: 8),
+                child: TextButton(
+                  onPressed: widget.goPageWisata,
                   child: Text(
                     'Lihat Semua',
                     style: TextStyle(
@@ -375,7 +551,7 @@ class _HomeState extends State<Home> {
                                           width: 5,
                                         ),
                                         Text(
-                                          listEvent[index].jam_mulai,
+                                          '${formatTime(listEvent[index].jam_mulai)} - ${formatTime(listEvent[index].jam_selesai)}',
                                           style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 12,
@@ -392,32 +568,6 @@ class _HomeState extends State<Home> {
                       );
                     },
                   ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                margin: EdgeInsets.only(bottom: 4, top: 0, left: 8),
-                //height: 50,
-                color: Colors.transparent,
-                child: const Text(
-                  'Rekomendasi Untuk Anda',
-                  style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500),
-                ),
-              ),
-              Container(
-                  margin: EdgeInsets.only(right: 8),
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'Lihat Semua',
-                      style: TextStyle(
-                          color: Colors.blue[600],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ))
-            ],
           ),
         ],
       ),

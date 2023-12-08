@@ -55,7 +55,7 @@ class _PageEventState extends State<PageEvent> {
           'Event',
           style: TextStyle(
             fontSize: 22,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w400,
             color: Colors.black,
           ),
         ),
