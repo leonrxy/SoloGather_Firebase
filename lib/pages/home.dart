@@ -3,7 +3,9 @@ import 'dart:async';
 import 'dart:math';
 import 'package:sologather/get_data/get_events.dart';
 import 'package:sologather/get_data/get_banner.dart';
+import 'package:sologather/get_data/get_wisata.dart';
 import 'package:sologather/pages/detailEvent.dart';
+import 'package:sologather/pages/detailWisata.dart';
 import 'package:sologather/widgets/shimmer.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
@@ -19,12 +21,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<Events> listEvent = [];
+  List<DataWisata> listWisata = [];
   List<AppBanner> listBanner = [];
   bool isLoading = true;
   bool isSearch = false;
 
   Repo repo = Repo();
   RepoBanner repoBanner = RepoBanner();
+  RepoWisata repoWisata = RepoWisata();
 
   Widget appLogo = Container(
     padding: const EdgeInsets.all(4.0),
@@ -56,11 +60,13 @@ class _HomeState extends State<Home> {
       });
       List<Events> event = await repo.getData('events');
       List<AppBanner> banner = await repoBanner.getData();
+      List<DataWisata> wisata = await repoWisata.getData();
       if (mounted) {
         // Pastikan widget masih ada sebelum memanggil setState
         setState(() {
           listEvent = event;
           listBanner = banner;
+          listWisata = wisata;
           if (listEvent.length == 0) {
             isLoading = true;
           } else {
@@ -459,7 +465,7 @@ class _HomeState extends State<Home> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  PageDetailEvent(event: listEvent[index]),
+                                  PageDetailWisata(wisata: listWisata[index]),
                             ),
                           );
                         },
@@ -477,8 +483,8 @@ class _HomeState extends State<Home> {
                                     margin: EdgeInsets.only(bottom: 3),
                                     decoration: BoxDecoration(
                                       image: DecorationImage(
-                                        image:
-                                            NetworkImage(listEvent[index].foto),
+                                        image: NetworkImage(
+                                            listWisata[index].foto),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -512,7 +518,7 @@ class _HomeState extends State<Home> {
                                           width: 5,
                                         ),
                                         Text(
-                                          listEvent[index].biaya,
+                                          listWisata[index].biaya,
                                           style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 12,
@@ -538,7 +544,7 @@ class _HomeState extends State<Home> {
                                           width: 5,
                                         ),
                                         Text(
-                                          listEvent[index].tanggal,
+                                          listWisata[index].jam_buka,
                                           style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 12,
@@ -564,7 +570,7 @@ class _HomeState extends State<Home> {
                                           width: 5,
                                         ),
                                         Text(
-                                          '${formatTime(listEvent[index].jam_mulai)} - ${formatTime(listEvent[index].jam_selesai)}',
+                                          '${formatTime(listWisata[index].jam_buka)} - ${formatTime(listWisata[index].jam_tutup)}',
                                           style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 12,

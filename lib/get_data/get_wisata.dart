@@ -44,7 +44,7 @@ class DataWisata {
   }
 }
 
-class Repo {
+class RepoWisata {
   Future<List<DataWisata>> getData() async {
     try {
       final response = await http.get(Uri.parse(

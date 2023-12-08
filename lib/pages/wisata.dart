@@ -13,7 +13,7 @@ class Wisata extends StatefulWidget {
 class _WisataState extends State<Wisata> {
   List<DataWisata> listWisata = [];
   bool isLoading = true;
-  Repo repo = Repo();
+  RepoWisata repo = RepoWisata();
 
   @override
   void initState() {

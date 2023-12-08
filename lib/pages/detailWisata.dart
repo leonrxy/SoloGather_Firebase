@@ -14,7 +14,7 @@ class PageDetailWisata extends StatefulWidget {
 class _PageDetailWisataState extends State<PageDetailWisata> {
   List<DataWisata> listWisata = [];
   bool isLoading = true;
-  Repo repo = Repo();
+  RepoWisata repo = RepoWisata();
 
   @override
   void initState() {
