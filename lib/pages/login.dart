@@ -1,7 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -10,78 +10,99 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   String errormsg = '';
-  bool statuslogin = false;
+  //var statuslogin = false;
+  late SharedPreferences prefs;
 
   bool error = false;
   bool showprogress = false;
+  bool statusLogin = false;
 
-  String username = '';
+  String email = '';
   String password = '';
 
-  var _username = TextEditingController();
+  var _email = TextEditingController();
 
   var _password = TextEditingController();
 
-  startLogin() async {
-    String apiurl = "https://leonrxy.my.id/leonews/login.php";
-    print(username);
-
-    var response = await http.post(Uri.parse(apiurl),
-        body: {'username': username, 'password': password});
-
-    if (response.statusCode == 200 && username != '' && password != '') {
-      statuslogin = false;
-      var jsondata = json.decode(response.body);
-      if (jsondata["error"]) {
-        setState(() {
-          showprogress = false;
-          error = true;
-          errormsg = jsondata["message"];
-        });
-      } else {
-        if (jsondata["success"]) {
-          setState(() {
-            statuslogin = true;
-            error = true;
-            showprogress = false;
-            errormsg = 'Login Berhasil!\nEmail : ' +
-                jsondata["email"] +
-                '\nNama : ' +
-                jsondata["nama"];
-          });
-          String email = jsondata["email"];
-          print(email);
-        } else {
-          showprogress = false;
-          error = true;
-          errormsg = "Something went wrong.";
-        }
-      }
-    } else if (username == '' || password == '') {
-      setState(() {
-        statuslogin = false;
-        showprogress = false; //don't show progress indicator
-        error = true;
-        errormsg = "Harap isi Username/Email dan Password.";
-      });
-    } else {
-      setState(() {
-        statuslogin = false;
-        showprogress = false; //don't show progress indicator
-        error = true;
-        errormsg = "Error during connecting to server.";
-      });
-    }
-  }
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   void initState() {
-    username = "";
+    super.initState();
+    email = "";
     password = "";
     errormsg = "";
     error = false;
     showprogress = false;
-    super.initState();
+    initPrefs().then((_) {
+      readLoginStatus();
+    });
+  }
+
+  Future<void> initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  // Save login status
+  Future<void> saveLoginStatus(User user) async {
+    prefs.setBool('isLogin', true);
+    print('Email : '+user.email!);
+    print('UID : '+user.uid);
+    prefs.setString('userUid', user.uid);
+    prefs.setString('userEmail', user.email!);
+    
+    //prefs.setString('userDisplayName', user.displayName!);
+  }
+
+  // Read login status
+  bool readLoginStatus() {
+    bool? statusLogin = prefs.getBool('isLogin');
+    String? userUid = prefs.getString('userUid');
+
+    if (statusLogin == true && userUid != null) {
+      // User is logged in, navigate to the profile page
+      Navigator.pop(context);
+
+      // Use Navigator.pushReplacementNamed to replace the current route with a new instance of Profil
+      Navigator.pushReplacementNamed(context, '/home');
+    }
+
+    return statusLogin ?? false;
+  }
+
+  startLogin() async {
+    try {
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      
+
+      // Login successful
+      setState(() {
+        //statuslogin = true;
+        error = false;
+        showprogress = false;
+        errormsg = 'Login Berhasil!\nEmail : ' + userCredential.user!.email!;
+      });
+
+      
+      saveLoginStatus(userCredential.user!);
+
+      Navigator.pop(context);
+
+      // Use Navigator.pushReplacementNamed to replace the current route with a new instance of Profil
+      Navigator.pushReplacementNamed(context, '/home');
+
+      //MyAppState.setUserEmail(userCredential.user!.email!);
+    } on FirebaseAuthException catch (e) {
+      // Login failed
+      setState(() {
+        showprogress = false;
+        error = true;
+        errormsg = e.message!;
+      });
+    }
   }
 
   @override
@@ -136,14 +157,14 @@ class _LoginState extends State<Login> {
                   width: 400,
                   height: 50,
                   child: TextFormField(
-                    controller: _username,
+                    controller: _email,
                     decoration: InputDecoration(
                       labelText: 'Username/Email',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
                       //set username  text on change
-                      username = value;
+                      email = value;
                     },
                   ),
                 ),
@@ -322,7 +343,7 @@ class _LoginState extends State<Login> {
 
   Widget errmsg(String text) {
     //error message widget.
-    if (statuslogin == false) {
+    if (statusLogin == false) {
       return Container(
         padding: EdgeInsets.all(7.00),
         margin: EdgeInsets.only(bottom: 4.00),

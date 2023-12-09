@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math';
-import 'package:sologather/get_data/get_events.dart';
+import 'package:sologather/get_data/get_events_firebase.dart';
 import 'package:sologather/get_data/get_banner.dart';
-import 'package:sologather/get_data/get_wisata.dart';
+import 'package:sologather/get_data/get_wisata_firebase.dart';
 import 'package:sologather/pages/detailEvent.dart';
 import 'package:sologather/pages/detailWisata.dart';
 import 'package:sologather/widgets/shimmer.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:intl/intl.dart';
 
@@ -58,7 +57,7 @@ class _HomeState extends State<Home> {
       setState(() {
         isLoading = true;
       });
-      List<Events> event = await repo.getData('events');
+      List<Events> event = await repo.getData();
       List<AppBanner> banner = await repoBanner.getData();
       List<DataWisata> wisata = await repoWisata.getData();
       if (mounted) {
@@ -184,8 +183,9 @@ class _HomeState extends State<Home> {
                             indicatorBackgroundColor:
                                 const Color.fromRGBO(158, 158, 158, 1),
                             children: List.generate(listBanner.length, (index) {
+                              AppBanner data = listBanner[index];
                               return Image.network(
-                                listBanner[index].foto,
+                                data.foto,
                                 fit: BoxFit.fill,
                               );
                             }),

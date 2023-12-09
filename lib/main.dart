@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:sologather/get_data/loginSession.dart';
 import 'package:sologather/pages/informasi.dart';
 import 'package:sologather/pages/kritiksaran.dart';
+import 'package:sologather/pages/logout.dart';
 import 'package:sologather/pages/pengaturan.dart';
 import 'package:sologather/pages/petaWisata.dart';
 import 'package:sologather/pages/tentang.dart';
@@ -14,7 +18,16 @@ import 'package:sologather/pages/login.dart';
 import 'package:sologather/pages/register.dart';
 import 'package:sologather/pages/favoritku.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => LoginSession(),
+      child: MyApp(),
+    ),
+  );
+}
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key});
@@ -49,12 +62,14 @@ class _MyAppState extends State<MyApp> {
         '/berita': (context) => Berita(),
         '/login': (context) => Login(),
         '/register': (context) => Register(),
+        '/register2': (context) => RegisterSuccess(),
         '/favoritku': (context) => Favoritku(),
         '/pengaturan': (context) => Pengaturan(),
         '/tentang': (context) => Tentang(),
         '/kritik': (context) => KritikSaran(),
         '/informasi': (context) => Informasi(),
         '/peta': (context) => PetaWisata(),
+        '/logout': (context) => Logout(),
       },
     );
   }

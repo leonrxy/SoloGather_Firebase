@@ -1,22 +1,23 @@
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppBanner {
   final String id;
-  final String nama;
   final String foto;
 
   const AppBanner({
     required this.id,
-    required this.nama,
     required this.foto,
   });
 
-  factory AppBanner.fromJson(Map<String, dynamic> json) {
+  factory AppBanner.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+
+    if (data == null) {
+      throw Exception('Data is null in document ${doc.id}');
+    }
     return AppBanner(
-      id: json['id'],
-      nama: json['nama'],
-      foto: json['foto'],
+      id: doc.id,
+      foto: data['foto'],
     );
   }
 }
@@ -24,16 +25,15 @@ class AppBanner {
 class RepoBanner {
   Future<List<AppBanner>> getData() async {
     try {
-      final response = await http.get(Uri.parse(
-          'https://leonrxy.my.id/sologather/api.php?kategori=banner'));
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection('banner').get();
 
-      if (response.statusCode == 200) {
-        Iterable it = jsonDecode(response.body);
-        List<AppBanner> event = it.map((e) => AppBanner.fromJson(e)).toList();
-        return event;
-      } else {
-        throw Exception('Gagal memuat konten');
-      }
+      print('Number of documents: ${querySnapshot.docs.length}');
+
+      List<AppBanner> banner = querySnapshot.docs.map((doc) {
+        return AppBanner.fromFirestore(doc);
+      }).toList();
+      return banner;
     } catch (e) {
       print(e.toString());
       return [];

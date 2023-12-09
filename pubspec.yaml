@@ -9,14 +9,18 @@ environment:
 dependencies:
   cached_network_image: ^3.3.0
   carousel_slider: ^4.2.1
+  cloud_firestore: ^4.13.5
   connectivity_plus: ^5.0.2
+  firebase_auth: ^4.15.2
+  firebase_core: ^2.24.2
   flutter:
     sdk: flutter
   flutter_image_slideshow: ^0.1.6
   google_maps_flutter: ^2.5.0
-  http: ^1.1.2
+  http: 1.0.0
   intl: ^0.18.1
   provider: ^6.1.1
+  shared_preferences: ^2.2.2
   shimmer: ^3.0.0
 
 dev_dependencies:

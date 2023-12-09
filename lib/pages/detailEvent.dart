@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sologather/get_data/get_events.dart';
+import 'package:sologather/get_data/get_events_firebase.dart';
 import 'package:intl/intl.dart';
 
 class PageDetailEvent extends StatefulWidget {
@@ -28,7 +28,7 @@ class _PageDetailEventState extends State<PageDetailEvent> {
 
   Future<void> getData() async {
     try {
-      List<Events> event = await repo.getData('events');
+      List<Events> event = await repo.getData();
 
       if (mounted) {
         setState(() {

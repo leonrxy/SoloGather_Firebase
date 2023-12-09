@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sologather/get_data/get_wisata.dart';
+import 'package:sologather/get_data/get_wisata_firebase.dart';
 import 'package:intl/intl.dart';
 
 class PageDetailWisata extends StatefulWidget {

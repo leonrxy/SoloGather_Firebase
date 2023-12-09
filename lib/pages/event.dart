@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sologather/get_data/get_events.dart';
+import 'package:sologather/get_data/get_events_firebase.dart';
 import 'package:sologather/pages/detailEvent.dart';
 import 'package:sologather/widgets/shimmer.dart';
 
@@ -27,7 +27,7 @@ class _PageEventState extends State<PageEvent> {
 
   Future<void> getData() async {
     try {
-      List<Events> event = await repo.getData('events');
+      List<Events> event = await repo.getData();
 
       if (mounted) {
         setState(() {
@@ -65,7 +65,7 @@ class _PageEventState extends State<PageEvent> {
       body: ListView(
         children: <Widget>[
           (isLoading || listEvent.length == 0)
-              ? AppShimmer(width: 140, height: 200)
+              ? AppShimmer(width: 500, height: 200)
               : Container(
                   padding: EdgeInsets.all(8.0),
                   child: SingleChildScrollView(
@@ -74,13 +74,14 @@ class _PageEventState extends State<PageEvent> {
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: listEvent.length,
                       itemBuilder: (context, index) {
+                        Events data = listEvent[index];
                         return InkWell(
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
-                                    PageDetailEvent(event: listEvent[index]),
+                                    PageDetailEvent(event: data),
                               ),
                             );
                           },
