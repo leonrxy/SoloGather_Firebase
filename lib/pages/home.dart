@@ -333,6 +333,7 @@ class _HomeState extends State<Home> {
                                       ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
+                                      textAlign: TextAlign.left,
                                     ),
                                   ),
                                   Container(

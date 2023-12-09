@@ -159,7 +159,7 @@ class _LoginState extends State<Login> {
                   child: TextFormField(
                     controller: _email,
                     decoration: InputDecoration(
-                      labelText: 'Username/Email',
+                      labelText: 'Email',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {

@@ -48,7 +48,7 @@ class _ProfilState extends State<Profil> {
       setState(() {
         menu = statusLogin
             ? [
-                {'name': 'Profil', 'icon': Icons.person, 'route': '/login'},
+                {'name': 'Profil', 'icon': Icons.person, 'route': '/profilku'},
                 {
                   'name': 'Favoritku',
                   'icon': Icons.favorite,
@@ -98,6 +98,9 @@ class _ProfilState extends State<Profil> {
                   'route': '/kritik'
                 },
               ];
+              if (email == 'admin@sg.com') {
+                menu.add({'name': 'Add Events', 'icon': Icons.star, 'route': '/addEvents'});
+              }
       });
     });
   }
@@ -176,63 +179,68 @@ class _ProfilState extends State<Profil> {
                     : Container(),
                 Expanded(
                   child: ListView(
-                    children: List.generate(menu.length, (index) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            onTap: () {
-                              Future.delayed(
-                                const Duration(milliseconds: 150),
-                                () {
-                                  Navigator.pushNamed(
-                                    context,
-                                    menu[index]['route'],
-                                  );
-                                },
-                              );
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                border: Border(
-                                  top: BorderSide(color: Colors.grey[300]!),
-                                  bottom: BorderSide(color: Colors.grey[300]!),
-                                ),
-                              ),
-                              padding: EdgeInsets.only(
-                                top: 15,
-                                bottom: 15,
-                                left: 8,
-                                right: 8,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(8),
-                                        child: Icon(menu[index]['icon']),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.only(left: 8.0),
-                                        child: Text(menu[index]['name']),
-                                      ),
-                                    ],
+                    children: List.generate(
+                      menu.length,
+                      (index) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                Future.delayed(
+                                  const Duration(milliseconds: 150),
+                                  () {
+                                    Navigator.pushNamed(
+                                      context,
+                                      menu[index]['route'],
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  border: Border(
+                                    top: BorderSide(color: Colors.grey[300]!),
+                                    bottom:
+                                        BorderSide(color: Colors.grey[300]!),
                                   ),
-                                  Container(
-                                    child: Icon(Icons.arrow_forward_ios),
-                                  )
-                                ],
+                                ),
+                                padding: EdgeInsets.only(
+                                  top: 15,
+                                  bottom: 15,
+                                  left: 8,
+                                  right: 8,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8),
+                                          child: Icon(menu[index]['icon']),
+                                        ),
+                                        Container(
+                                          margin: EdgeInsets.only(left: 8.0),
+                                          child: Text(menu[index]['name']),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      child: Icon(Icons.arrow_forward_ios),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    }),
+                        );
+                      },
+                    ),
+                    
                   ),
                 ),
               ],

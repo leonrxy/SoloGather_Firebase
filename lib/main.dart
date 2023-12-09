@@ -17,6 +17,8 @@ import 'package:sologather/pages/berita.dart';
 import 'package:sologather/pages/login.dart';
 import 'package:sologather/pages/register.dart';
 import 'package:sologather/pages/favoritku.dart';
+import 'package:sologather/pages/addEvents.dart';
+import 'package:sologather/pages/profilku.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,6 +72,8 @@ class _MyAppState extends State<MyApp> {
         '/informasi': (context) => Informasi(),
         '/peta': (context) => PetaWisata(),
         '/logout': (context) => Logout(),
+        '/addEvents': (context) => EventsForm(),
+        '/profilku': (context) => Profilku(),
       },
     );
   }
