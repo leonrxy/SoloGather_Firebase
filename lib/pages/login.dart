@@ -46,11 +46,11 @@ class _LoginState extends State<Login> {
   // Save login status
   Future<void> saveLoginStatus(User user) async {
     prefs.setBool('isLogin', true);
-    print('Email : '+user.email!);
-    print('UID : '+user.uid);
+    print('Email : ' + user.email!);
+    print('UID : ' + user.uid);
     prefs.setString('userUid', user.uid);
     prefs.setString('userEmail', user.email!);
-    
+
     //prefs.setString('userDisplayName', user.displayName!);
   }
 
@@ -76,7 +76,6 @@ class _LoginState extends State<Login> {
         email: email,
         password: password,
       );
-      
 
       // Login successful
       setState(() {
@@ -86,7 +85,6 @@ class _LoginState extends State<Login> {
         errormsg = 'Login Berhasil!\nEmail : ' + userCredential.user!.email!;
       });
 
-      
       saveLoginStatus(userCredential.user!);
 
       Navigator.pop(context);
@@ -163,9 +161,9 @@ class _LoginState extends State<Login> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
-                      //set username  text on change
                       email = value;
                     },
+                    keyboardType: TextInputType.emailAddress,
                   ),
                 ),
                 SizedBox(height: 16),
@@ -225,7 +223,8 @@ class _LoginState extends State<Login> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton(
+                      Expanded(
+                        child: TextButton(
                           onPressed: () {
                             Navigator.pushNamed(context, '/register');
                           },
@@ -235,20 +234,24 @@ class _LoginState extends State<Login> {
                               decoration: TextDecoration.underline,
                               fontSize: 14,
                             ),
-                          )),
-                      Text('atau'),
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.pushNamed(context, '/login');
-                        },
-                        child: Text(
-                          'Lupa Password?',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            fontSize: 14,
                           ),
                         ),
-                      )
+                      ),
+                      Text('atau'),
+                      Expanded(
+                        child: TextButton(
+                          onPressed: () {
+                            // Navigator.pushNamed(context, '/login');
+                          },
+                          child: Text(
+                            'Lupa Password?',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -356,48 +359,14 @@ class _LoginState extends State<Login> {
             margin: EdgeInsets.only(right: 6.00),
             child: Icon(Icons.error, color: Colors.white),
           ),
-          Text(text, style: TextStyle(color: Colors.white, fontSize: 13)),
+          Expanded(
+            child:
+                Text(text, style: TextStyle(color: Colors.white, fontSize: 13)),
+          ),
         ]),
       );
     } else {
-      return Container(
-        padding: EdgeInsets.all(7.00),
-        margin: EdgeInsets.only(bottom: 4.00),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.green,
-            border: Border.all(color: Colors.green, width: 2)),
-        child: Row(children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(right: 6.00),
-            child: Icon(Icons.check_circle, color: Colors.white),
-          ), // icon for error message
-
-          Text(text, style: TextStyle(color: Colors.white, fontSize: 13)),
-          //show error message text
-        ]),
-      );
+      return Container();
     }
-  }
-
-  Widget sucmsg(String text) {
-    //error message widget.
-    return Container(
-      padding: EdgeInsets.all(7.00),
-      margin: EdgeInsets.only(bottom: 10.00),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Colors.red,
-          border: Border.all(color: Colors.green, width: 2)),
-      child: Row(children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(right: 6.00),
-          child: Icon(Icons.info, color: Colors.white),
-        ), // icon for error message
-
-        Text(text, style: TextStyle(color: Colors.white, fontSize: 13)),
-        //show error message text
-      ]),
-    );
   }
 }

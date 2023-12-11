@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:sologather/get_data/loginSession.dart';
+import 'package:sologather/pages/addWisata.dart';
 import 'package:sologather/pages/informasi.dart';
 import 'package:sologather/pages/kritiksaran.dart';
 import 'package:sologather/pages/logout.dart';
@@ -73,6 +74,7 @@ class _MyAppState extends State<MyApp> {
         '/peta': (context) => PetaWisata(),
         '/logout': (context) => Logout(),
         '/addEvents': (context) => EventsForm(),
+        '/addWisata': (context) => WisataForm(),
         '/profilku': (context) => Profilku(),
       },
     );

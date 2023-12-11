@@ -9,8 +9,8 @@ class WisataForm extends StatefulWidget {
 
 class _WisataFormState extends State<WisataForm> {
   TextEditingController dateinput = TextEditingController();
-  TextEditingController _jamMulai = TextEditingController();
-  TextEditingController _jamSelesai = TextEditingController();
+  TextEditingController _jamBuka = TextEditingController();
+  TextEditingController _jamTutup = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
   bool clickButton = false;
@@ -18,11 +18,11 @@ class _WisataFormState extends State<WisataForm> {
   String errorMessage = '';
 
   String nama = '';
+  String telp = '';
   String foto = '';
   String biaya = '';
-  String tanggal = '';
-  String jamMulai = '';
-  String jamSelesai = '';
+  String jamBuka = '';
+  String jamTutup = '';
   String tempat = '';
   String deskripsi = '';
   String gmaps = '';
@@ -44,11 +44,11 @@ class _WisataFormState extends State<WisataForm> {
       // Simpan data acara ke Firestore
       await FirebaseFirestore.instance.collection('events').add({
         'nama': nama,
+        'telp': telp,
         'foto': foto,
         'biaya': biaya,
-        'tanggal': dateinput.text,
-        'jam_mulai': _jamMulai.text,
-        'jam_selesai': _jamSelesai.text,
+        'jam_mulai': _jamBuka.text,
+        'jam_selesai': _jamTutup.text,
         'tempat': tempat,
         'deskripsi': deskripsi,
         'gmaps': gmaps,
@@ -89,7 +89,7 @@ class _WisataFormState extends State<WisataForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Events'),
+        title: Text('Add Wisata'),
         backgroundColor: Colors.blue[500],
         centerTitle: true,
       ),
@@ -117,7 +117,21 @@ class _WisataFormState extends State<WisataForm> {
                   height: 50,
                   child: TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Nama Acara',
+                      labelText: 'Nama Tempat Wisata',
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      nama = value;
+                    },
+                  ),
+                ),
+                SizedBox(height: 16),
+                Container(
+                  width: 400,
+                  height: 50,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'No Telepon',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
@@ -157,54 +171,20 @@ class _WisataFormState extends State<WisataForm> {
                 Container(
                   width: 400,
                   height: 50,
-                  child: TextFormField(
-                    controller: dateinput,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Tanggal Acara',
-                    ),
-                    readOnly: true,
-                    onTap: () async {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2101),
-                      );
-
-                      if (pickedDate != null) {
-                        print(pickedDate);
-                        String formattedDate =
-                            DateFormat('yyyy-MM-dd').format(pickedDate);
-                        print(formattedDate);
-
-                        setState(() {
-                          dateinput.text = formattedDate;
-                        });
-                      } else {
-                        print("Date is not selected");
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(height: 16),
-                Container(
-                  width: 400,
-                  height: 50,
                   child: GestureDetector(
-                    onTap: () => _selectTime(context, _jamMulai),
+                    onTap: () => _selectTime(context, _jamBuka),
                     child: AbsorbPointer(
                       child: TextFormField(
-                        controller: _jamMulai,
+                        controller: _jamBuka,
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: false),
                         decoration: InputDecoration(
                           hintText: '00:00:00',
-                          labelText: 'Jam Mulai',
+                          labelText: 'Jam Buka',
                           border: OutlineInputBorder(),
                         ),
                         onChanged: (value) {
-                          jamMulai = value;
+                          jamBuka = value;
                         },
                       ),
                     ),
@@ -215,19 +195,19 @@ class _WisataFormState extends State<WisataForm> {
                   width: 400,
                   height: 50,
                   child: GestureDetector(
-                    onTap: () => _selectTime(context, _jamSelesai),
+                    onTap: () => _selectTime(context, _jamTutup),
                     child: AbsorbPointer(
                       child: TextFormField(
-                        controller: _jamSelesai,
+                        controller: _jamTutup,
                         keyboardType:
                             TextInputType.numberWithOptions(decimal: false),
                         decoration: InputDecoration(
                           hintText: '00:00:00',
-                          labelText: 'Jam Selesai',
+                          labelText: 'Jam Tutup',
                           border: OutlineInputBorder(),
                         ),
                         onChanged: (value) {
-                          jamSelesai = value;
+                          jamTutup = value;
                         },
                       ),
                     ),
@@ -253,7 +233,7 @@ class _WisataFormState extends State<WisataForm> {
                   height: 50,
                   child: TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'deskripsi',
+                      labelText: 'Deskripsi',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {

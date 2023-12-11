@@ -99,7 +99,8 @@ class _ProfilState extends State<Profil> {
                 },
               ];
               if (email == 'admin@sg.com') {
-                menu.add({'name': 'Add Events', 'icon': Icons.star, 'route': '/addEvents'});
+                menu.add({'name': 'Add Events', 'icon': Icons.event_available_rounded, 'route': '/addEvents'});
+                menu.add({'name': 'Add Wisata', 'icon': Icons.location_city_rounded, 'route': '/addWisata'});
               }
       });
     });

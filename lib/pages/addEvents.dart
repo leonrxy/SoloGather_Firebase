@@ -253,7 +253,7 @@ class _EventsFormState extends State<EventsForm> {
                   height: 50,
                   child: TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'deskripsi',
+                      labelText: 'Deskripsi',
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
