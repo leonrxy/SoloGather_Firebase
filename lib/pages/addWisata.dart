@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class WisataForm extends StatefulWidget {
@@ -42,13 +41,13 @@ class _WisataFormState extends State<WisataForm> {
   startRegistration() async {
     try {
       // Simpan data acara ke Firestore
-      await FirebaseFirestore.instance.collection('events').add({
+      await FirebaseFirestore.instance.collection('wisata').add({
         'nama': nama,
         'telp': telp,
         'foto': foto,
         'biaya': biaya,
-        'jam_mulai': _jamBuka.text,
-        'jam_selesai': _jamTutup.text,
+        'jam_buka': _jamBuka.text,
+        'jam_tutup': _jamTutup.text,
         'tempat': tempat,
         'deskripsi': deskripsi,
         'gmaps': gmaps,
@@ -104,7 +103,7 @@ class _WisataFormState extends State<WisataForm> {
                 SizedBox(height: 16),
                 Center(
                   child: Text(
-                    'SoloGather - Add Events',
+                    'SoloGather - Add Wisata',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -135,7 +134,7 @@ class _WisataFormState extends State<WisataForm> {
                       border: OutlineInputBorder(),
                     ),
                     onChanged: (value) {
-                      nama = value;
+                      telp = value;
                     },
                   ),
                 ),

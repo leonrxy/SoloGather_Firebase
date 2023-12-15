@@ -493,7 +493,7 @@ class _HomeState extends State<Home> {
                                   Container(
                                     padding: EdgeInsets.only(left: 4, right: 4),
                                     child: Text(
-                                      listEvent[index].nama,
+                                      listWisata[index].nama,
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14,

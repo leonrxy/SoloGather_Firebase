@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:sologather/get_data/loginSession.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sologather/pages/addWisata.dart';
+import 'package:sologather/pages/admin/admin.dart';
 import 'package:sologather/pages/informasi.dart';
 import 'package:sologather/pages/kritiksaran.dart';
 import 'package:sologather/pages/logout.dart';
 import 'package:sologather/pages/pengaturan.dart';
+import 'package:sologather/pages/pesanTiket.dart';
 import 'package:sologather/pages/petaWisata.dart';
 import 'package:sologather/pages/tentang.dart';
 import 'package:sologather/splashscreen.dart';
@@ -14,7 +17,6 @@ import 'package:sologather/pages/home.dart';
 import 'package:sologather/pages/profil.dart';
 import 'package:sologather/pages/event.dart';
 import 'package:sologather/pages/wisata.dart';
-import 'package:sologather/pages/berita.dart';
 import 'package:sologather/pages/login.dart';
 import 'package:sologather/pages/register.dart';
 import 'package:sologather/pages/favoritku.dart';
@@ -62,7 +64,6 @@ class _MyAppState extends State<MyApp> {
         '/profil': (context) => Profil(),
         '/event': (context) => PageEvent(),
         '/wisata': (context) => Wisata(),
-        '/berita': (context) => Berita(),
         '/login': (context) => Login(),
         '/register': (context) => Register(),
         '/register2': (context) => RegisterSuccess(),
@@ -76,6 +77,7 @@ class _MyAppState extends State<MyApp> {
         '/addEvents': (context) => EventsForm(),
         '/addWisata': (context) => WisataForm(),
         '/profilku': (context) => Profilku(),
+        '/pesanTiket': (context) => PesanTiket(),
       },
     );
   }
@@ -91,27 +93,30 @@ class NavigationBar extends StatefulWidget {
 class _NavigationBarState extends State<NavigationBar>
     with TickerProviderStateMixin {
   int _selectedIndex = 0;
+  String email = '';
+  String name = '';
+  bool statusLogin = false;
+  List<Widget> _widgetOptions = <Widget>[];
+  List<BottomNavigationBarItem> _bottomNavBarItems =
+      <BottomNavigationBarItem>[];
 
   @override
   void initState() {
     super.initState();
+    setNavbar();
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+  Future<void> getProfil() async {
+    final prefs = await SharedPreferences.getInstance();
+    email = prefs.getString('userEmail') ?? '';
+    print('Email' + email);
+    name = (await LoginSession.getNameFromEmail(email)) ?? '';
+    print('Name' + name);
   }
 
-  void _changeNavigationIndex(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> _widgetOptions = <Widget>[
+  setNavbar() {
+    getProfil();
+    _widgetOptions = <Widget>[
       Home(
         goPageEvent: () {
           setState(() {
@@ -129,6 +134,51 @@ class _NavigationBarState extends State<NavigationBar>
       Profil(),
     ];
 
+    _bottomNavBarItems = <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Beranda',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.event_available_rounded),
+        label: 'Event',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.location_city_rounded),
+        label: 'Wisata',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person_2_rounded),
+        label: 'Profil',
+      ),
+    ];
+
+    if (email == 'admin@sg.com') {
+      print('LOGIN SEBAGAI ADMIN');
+      _widgetOptions.add(PageAdmin());
+      _bottomNavBarItems.add(
+        BottomNavigationBarItem(
+          icon: Icon(Icons.admin_panel_settings_rounded),
+          label: 'Admin',
+        ),
+      );
+    }
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  void _changeNavigationIndex(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
         //controller: _tabController,
@@ -136,24 +186,7 @@ class _NavigationBarState extends State<NavigationBar>
         index: _selectedIndex,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.event_available_rounded),
-            label: 'Event',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.location_city_rounded),
-            label: 'Wisata',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_rounded),
-            label: 'Profil',
-          ),
-        ],
+        items: _bottomNavBarItems,
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.blue[800],
         onTap: _onItemTapped,

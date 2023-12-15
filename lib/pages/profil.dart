@@ -21,8 +21,8 @@ class _ProfilState extends State<Profil> {
   @override
   void initState() {
     super.initState();
-    setMenu();
     getProfil();
+    setMenu();
     SharedPreferences.getInstance().then((prefs) {
       setState(() {
         statusLogin = prefs.getBool('isLogin') ?? false;
@@ -101,6 +101,7 @@ class _ProfilState extends State<Profil> {
               if (email == 'admin@sg.com') {
                 menu.add({'name': 'Add Events', 'icon': Icons.event_available_rounded, 'route': '/addEvents'});
                 menu.add({'name': 'Add Wisata', 'icon': Icons.location_city_rounded, 'route': '/addWisata'});
+                //menu.add({'name': 'Pesan Tiket', 'icon': Icons.airplane_ticket_rounded, 'route': '/pesanTiket'});
               }
       });
     });
