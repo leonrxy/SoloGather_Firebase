@@ -53,33 +53,38 @@ class _LoginState extends State<Login> {
     prefs.setString('userEmail', user.email!);
     String name = await getNameFromEmail(email) ?? '';
     prefs.setString('userName', name);
-
-    //prefs.setString('userDisplayName', user.displayName!);
+    if (user.email! == 'admin@sg.com') {
+      prefs.setBool('isAdmin', true);
+    } else {
+      prefs.setBool('isAdmin', false);
+    }
   }
 
   Future<String?> getNameFromEmail(String email) async {
-  try {
-    // Mendapatkan referensi koleksi 'users' di Firestore
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    try {
+      // Mendapatkan referensi koleksi 'users' di Firestore
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
 
-    // Membuat kueri untuk mencari dokumen dengan email yang sesuai
-    QuerySnapshot querySnapshot = await users.where('email', isEqualTo: email).get();
+      // Membuat kueri untuk mencari dokumen dengan email yang sesuai
+      QuerySnapshot querySnapshot =
+          await users.where('email', isEqualTo: email).get();
 
-    // Memeriksa apakah dokumen ditemukan
-    if (querySnapshot.docs.isNotEmpty) {
-      // Mengambil data nama dari dokumen pertama yang ditemukan
-      String? name = querySnapshot.docs.first.get('name');
-      return name;
-    } else {
-      // Jika tidak ada dokumen yang ditemukan
+      // Memeriksa apakah dokumen ditemukan
+      if (querySnapshot.docs.isNotEmpty) {
+        // Mengambil data nama dari dokumen pertama yang ditemukan
+        String? name = querySnapshot.docs.first.get('name');
+        return name;
+      } else {
+        // Jika tidak ada dokumen yang ditemukan
+        return null;
+      }
+    } catch (e) {
+      // Handle kesalahan jika terjadi
+      print('Error fetching user data: $e');
       return null;
     }
-  } catch (e) {
-    // Handle kesalahan jika terjadi
-    print('Error fetching user data: $e');
-    return null;
   }
-}
 
   // Read login status
   bool readLoginStatus() {

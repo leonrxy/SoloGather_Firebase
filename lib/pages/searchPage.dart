@@ -90,7 +90,7 @@ class _SearchResultsPageState extends State<SearchResultsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hasil Pencarian'),
+        title: Text('Hasil Pencarian `${widget.search}`'),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'editprofilku.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Profilku extends StatefulWidget {
   const Profilku({Key? key});
@@ -48,7 +49,9 @@ class _ProfilkuState extends State<Profilku> {
         documentSnapshot['alamat'] != null
             ? alamat = documentSnapshot['alamat']
             : '-';
-        documentSnapshot['no_hp'] != null ? no_hp = documentSnapshot['no_hp'] : '-';
+        documentSnapshot['no_hp'] != null
+            ? no_hp = documentSnapshot['no_hp']
+            : '-';
       });
     } catch (e) {
       print('Error fetching data from Firestore: $e');
@@ -68,14 +71,14 @@ class _ProfilkuState extends State<Profilku> {
           ),
         ),
         leading: BackButton(color: Colors.white),
-        backgroundColor: Colors.blue[600],
+        backgroundColor: Colors.blue,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.blue[600],
+                color: Colors.blue,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(45),
                   bottomRight: Radius.circular(45),
@@ -89,14 +92,6 @@ class _ProfilkuState extends State<Profilku> {
                     backgroundImage: AssetImage('assets/images/header.jpg'),
                   ),
                   SizedBox(height: 20),
-                  Text(
-                    'Username',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -109,6 +104,38 @@ class _ProfilkuState extends State<Profilku> {
             buildDivider(),
             buildBiodataRow(Icons.phone, 'Phone', no_hp),
             buildDivider(),
+            SizedBox(height: 16),
+            Container(
+              width: double.infinity,
+              margin: EdgeInsets.symmetric(horizontal: 30),
+              height: 50,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditProfilku(nama: nama, email: email, alamat: alamat, no_hp: no_hp),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Edit Profil',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue,
+                  padding:
+                      EdgeInsets.only(top: 10, bottom: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

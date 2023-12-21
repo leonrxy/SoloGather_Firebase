@@ -4,6 +4,7 @@ import 'package:sologather/get_data/get_wisata_firebase.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:sologather/pages/rating.dart';
 
 class PageDetailWisata extends StatefulWidget {
   const PageDetailWisata({super.key, required this.wisata});
@@ -277,6 +278,7 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
           ),
           Container(
             margin: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(bottom: 6),
             color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,7 +309,7 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
                   padding: EdgeInsets.all(15),
                   child: RatingBar.builder(
                     initialRating: 0,
-                    minRating: 1,
+                    minRating: 0,
                     direction: Axis.horizontal,
                     allowHalfRating: true,
                     itemCount: 5,
@@ -317,17 +319,30 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
                       color: Colors.blue,
                     ),
                     onRatingUpdate: (rating) {
-                      print(rating);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Rating(rating: rating)),
+                      );
                     },
+                    
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Text(
-                    'Tulis ulasan anda',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.blue,
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Rating(rating: 0,)),
+                    );
+                  },
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      'Tulis ulasan anda',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ),
@@ -364,59 +379,59 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
                     ),
                   ),
                 ),
-
                 Container(
-            height: 200,
-            child: FutureBuilder<LatLng>(
-              future: getLocation(widget.wisata.gmaps),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                } else {
-                  return GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: snapshot.data ?? LatLng(0, 0),
-                      zoom: 13,
-                    ),
-                    markers: {
-                      Marker(
-                        markerId: MarkerId("source"),
-                        position: snapshot.data ?? LatLng(0, 0),
-                      )
+                  height: 200,
+                  child: FutureBuilder<LatLng>(
+                    future: getLocation(widget.wisata.gmaps),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        return GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: snapshot.data ?? LatLng(0, 0),
+                            zoom: 13,
+                          ),
+                          markers: {
+                            Marker(
+                              markerId: MarkerId("source"),
+                              position: snapshot.data ?? LatLng(0, 0),
+                            )
+                          },
+                        );
+                      }
                     },
-                  );
-                }
-              },
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-            child: TextButton(
-              onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => PesanTiket(event: widget.wisata),
-                //   ),
-                // );
-              },
-              child: Text(
-                'Pesan Sekarang',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+                  ),
                 ),
-              ),
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding:
-                    EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-              ),
-            ),
-          ),
+                Container(
+                  margin: EdgeInsets.only(top: 10),
+                  padding:
+                      EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+                  child: TextButton(
+                    onPressed: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => PesanTiket(event: widget.wisata),
+                      //   ),
+                      // );
+                    },
+                    child: Text(
+                      'Pesan Sekarang',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      padding: EdgeInsets.only(
+                          top: 10, bottom: 10, left: 15, right: 15),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

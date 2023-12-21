@@ -125,7 +125,7 @@ class _NavigationBarState extends State<NavigationBar>
   int _selectedIndex = 0;
   String email = '';
   String name = '';
-  bool statusLogin = false;
+  bool isAdmin = false;
   List<Widget> _widgetOptions = <Widget>[];
   List bottomNavBarItems = [];
   List<GButton> _bottomNavBarItems = <GButton>[];
@@ -134,22 +134,21 @@ class _NavigationBarState extends State<NavigationBar>
   void initState() {
     super.initState();
     cekAdmin();
-    setNavbar(widget.isAdmin);
+    SharedPreferences.getInstance().then((prefs) {
+      setState(() {
+        setNavbar(isAdmin);
+      });
+    });
   }
 
-  Future cekAdmin() async {
+  Future<void> cekAdmin() async {
     final prefs = await SharedPreferences.getInstance();
     email = prefs.getString('userEmail') ?? '';
-    print('Email' + email);
-    name = await getNameFromEmail(email) ?? '';
-    print('Name' + name);
-    bool isAdmin = false;
     if (email == 'admin@sg.com') {
       isAdmin = true;
     } else {
       isAdmin = false;
     }
-    return isAdmin;
   }
 
   Future<String?> getNameFromEmail(String email) async {
