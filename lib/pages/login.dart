@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -50,9 +51,35 @@ class _LoginState extends State<Login> {
     print('UID : ' + user.uid);
     prefs.setString('userUid', user.uid);
     prefs.setString('userEmail', user.email!);
+    String name = await getNameFromEmail(email) ?? '';
+    prefs.setString('userName', name);
 
     //prefs.setString('userDisplayName', user.displayName!);
   }
+
+  Future<String?> getNameFromEmail(String email) async {
+  try {
+    // Mendapatkan referensi koleksi 'users' di Firestore
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    // Membuat kueri untuk mencari dokumen dengan email yang sesuai
+    QuerySnapshot querySnapshot = await users.where('email', isEqualTo: email).get();
+
+    // Memeriksa apakah dokumen ditemukan
+    if (querySnapshot.docs.isNotEmpty) {
+      // Mengambil data nama dari dokumen pertama yang ditemukan
+      String? name = querySnapshot.docs.first.get('name');
+      return name;
+    } else {
+      // Jika tidak ada dokumen yang ditemukan
+      return null;
+    }
+  } catch (e) {
+    // Handle kesalahan jika terjadi
+    print('Error fetching user data: $e');
+    return null;
+  }
+}
 
   // Read login status
   bool readLoginStatus() {

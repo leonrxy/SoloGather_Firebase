@@ -22,6 +22,7 @@ import 'package:sologather/pages/register.dart';
 import 'package:sologather/pages/favoritku.dart';
 import 'package:sologather/pages/addEvents.dart';
 import 'package:sologather/pages/profilku.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -110,12 +111,39 @@ class _NavigationBarState extends State<NavigationBar>
     final prefs = await SharedPreferences.getInstance();
     email = prefs.getString('userEmail') ?? '';
     print('Email' + email);
-    name = (await LoginSession.getNameFromEmail(email)) ?? '';
+    name = await getNameFromEmail(email) ?? '';
     print('Name' + name);
+  }
+
+  Future<String?> getNameFromEmail(String email) async {
+    try {
+      // Mendapatkan referensi koleksi 'users' di Firestore
+      CollectionReference users =
+          FirebaseFirestore.instance.collection('users');
+
+      // Membuat kueri untuk mencari dokumen dengan email yang sesuai
+      QuerySnapshot querySnapshot =
+          await users.where('email', isEqualTo: email).get();
+
+      // Memeriksa apakah dokumen ditemukan
+      if (querySnapshot.docs.isNotEmpty) {
+        // Mengambil data nama dari dokumen pertama yang ditemukan
+        String? name = querySnapshot.docs.first.get('name');
+        return name;
+      } else {
+        // Jika tidak ada dokumen yang ditemukan
+        return null;
+      }
+    } catch (e) {
+      // Handle kesalahan jika terjadi
+      print('Error fetching user data: $e');
+      return null;
+    }
   }
 
   setNavbar() {
     getProfil();
+    print('Emailku: ' + email);
     _widgetOptions = <Widget>[
       Home(
         goPageEvent: () {
@@ -162,6 +190,8 @@ class _NavigationBarState extends State<NavigationBar>
           label: 'Admin',
         ),
       );
+    } else {
+      print('BUKAN ADMIN');
     }
   }
 
