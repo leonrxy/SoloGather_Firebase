@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
 
 class Register extends StatefulWidget {
   @override
@@ -60,7 +62,7 @@ class _RegisterState extends State<Register> {
       });
 
       // Navigate to the desired screen (e.g., home screen)
-      Navigator.pushReplacementNamed(context, '/register2');
+      Navigator.pushReplacementNamed(context, '/verifEmail');
     } on FirebaseAuthException catch (e) {
       // Registration failed
       setState(() {
@@ -333,6 +335,185 @@ Widget errmsg(String text) {
       ],
     ),
   );
+}
+
+class VerifEmail extends StatefulWidget {
+  @override
+  State<VerifEmail> createState() => _VerifEmailState();
+}
+
+class _VerifEmailState extends State<VerifEmail> {
+  bool isEmailVerified = false;
+  Timer? timer;
+  int timerCount = 0;
+  bool isButtonLoading = false;
+  int countdown = 30;
+  Timer? countdownTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.currentUser?.sendEmailVerification();
+    timer =
+        Timer.periodic(const Duration(seconds: 3), (_) => checkEmailVerified());
+  }
+
+  checkEmailVerified() async {
+    await FirebaseAuth.instance.currentUser?.reload();
+
+    setState(() {
+      isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
+    });
+
+    if (isEmailVerified) {
+      // TODO: Implement your code after email verification
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Email Successfully Verified")));
+
+      // Navigate to the desired screen after successful login
+      Navigator.pushReplacementNamed(context, '/home');
+
+      timer?.cancel();
+    }
+  }
+
+  Future<void> resendVerificationEmail() async {
+    try {
+      setState(() {
+        isButtonLoading = true;
+        countdown = 30;
+      });
+
+      countdownTimer = Timer.periodic(Duration(seconds: 2), (timer) {
+        if (countdown > 0) {
+          setState(() {
+            countdown--;
+          });
+        } else {
+          countdownTimer?.cancel();
+          setState(() {
+            isButtonLoading = false;
+            
+          });
+        }
+      });
+      if(countdown <= 0){
+        await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+      }
+
+      // Simulate a delay for demonstration purposes
+      await Future.delayed(Duration(seconds: 30));
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Verification Email Resent")),
+      );
+
+      setState(() {
+        isButtonLoading = false;
+      });
+    } catch (e) {
+      countdownTimer?.cancel();
+      setState(() {
+        isButtonLoading = false;
+      });
+      debugPrint('$e');
+    }
+  }
+
+  @override
+  void dispose() {
+    countdownTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Login',
+            style: TextStyle(
+                fontSize: 22, fontWeight: FontWeight.w500, color: Colors.black),
+          ),
+          backgroundColor: Colors.white,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ),
+        body: ListView(
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  SizedBox(height: 25),
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: 200,
+                  ),
+                  SizedBox(height: 25),
+                  Text(
+                    'Verifikasi Email',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  Container(
+                    width: 400,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Kami telah mengirimkan email verifikasi ke alamat email Anda. Silakan periksa kotak masuk Anda dan klik tautan di dalamnya untuk memverifikasi akun Anda.',
+                      style: TextStyle(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  if (isButtonLoading)
+                    CircularProgressIndicator(
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(Colors.blueAccent),
+                    )
+                  else
+                    Container(),
+                  SizedBox(height: 10),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: isButtonLoading
+                              ? null
+                              : () async => await resendVerificationEmail(),
+                          child: Text(
+                            'Kirim ulang email verifikasi',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.blue[500],
+                            ),
+                          ),
+                        ),
+                        if (isButtonLoading) SizedBox(width: 8),
+                        if (isButtonLoading)
+                          Text(
+                            '($countdown)',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class RegisterSuccess extends StatelessWidget {

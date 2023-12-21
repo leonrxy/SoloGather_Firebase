@@ -121,11 +121,10 @@ class _PesanTiketState extends State<PesanTiket> {
               child: SfDateRangePicker(
                 onSelectionChanged: _onSelectionChanged,
                 selectionMode: DateRangePickerSelectionMode.single,
-                initialSelectedRange: PickerDateRange(
-                    DateTime.now().subtract(const Duration(days: 4)),
-                    DateTime.now().add(const Duration(days: 3))),
                 minDate: DateTime.now(),
-                initialSelectedDate: DateTime.now(),
+                // initialSelectedDate: DateTime.now(),
+                // initialSelectedRange: PickerDateRange(
+                //     DateTime.now(), DateTime.now().add(Duration(days: 1))),
               ),
             ),
             Container(

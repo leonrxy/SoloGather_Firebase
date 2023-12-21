@@ -10,6 +10,7 @@ import 'package:sologather/pages/informasi.dart';
 import 'package:sologather/pages/kritiksaran.dart';
 import 'package:sologather/pages/auth/logout.dart';
 import 'package:sologather/pages/pengaturan.dart';
+import 'package:sologather/pages/pesanTiket/pesanTiketSukses.dart';
 import 'package:sologather/pages/petaWisata.dart';
 import 'package:sologather/pages/tentang.dart';
 import 'package:sologather/pages/tiketSaya.dart';
@@ -94,7 +95,8 @@ class _MyAppState extends State<MyApp> {
         '/wisata': (context) => Wisata(),
         '/login': (context) => Login(),
         '/register': (context) => Register(),
-        '/register2': (context) => RegisterSuccess(),
+        '/verifEmail': (context) => VerifEmail(),
+        '/registerSuccess': (context) => RegisterSuccess(),
         '/favoritku': (context) => Favoritku(),
         '/pengaturan': (context) => Pengaturan(),
         '/tentang': (context) => Tentang(),
@@ -105,6 +107,7 @@ class _MyAppState extends State<MyApp> {
         '/addEvents': (context) => EventsForm(),
         '/addWisata': (context) => WisataForm(),
         '/profilku': (context) => Profilku(),
+        '/pesanTiketSukses': (context) => PesanTiketSukses(),
         '/tiketSaya': (context) => TiketSaya(),
       },
     );

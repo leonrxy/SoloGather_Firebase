@@ -4,6 +4,8 @@ import 'package:sologather/get_data/get_events_firebase.dart';
 import 'package:sologather/pages/pesanTiket/pesanTiketSukses.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DetailTiket extends StatefulWidget {
   const DetailTiket(
@@ -31,11 +33,55 @@ class _DetailTiketState extends State<DetailTiket> {
   String _rangeCount = '';
   String email = '';
   String name = '';
+  String harga = '';
+  String jmlTiket = '';
+  String tanggal = '';
+  String jam_mulai = '';
+  String jam_selesai = '';
+  String tempat = '';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   void initState() {
     super.initState();
     init();
     getProfil();
+  }
+
+  startRegistration() async {
+    try {
+      harga = widget.event.biaya * widget.jmlTiket.toInt();
+      jmlTiket = widget.jmlTiket.toString();
+      tanggal = widget.date;
+      jam_mulai = widget.event.jam_mulai;
+      jam_selesai = widget.event.jam_selesai;
+      tempat = widget.event.tempat;
+      await FirebaseFirestore.instance
+          .collection('tiket')
+          .doc(_auth.currentUser!.uid)
+          .set({
+        'email': email,
+        'nama': name,
+        'harga': harga,
+        'jmlTiket': jmlTiket,
+        'tanggal': tanggal,
+        'jam_mulai': jam_mulai,
+        'jam_selesai': jam_selesai,
+        'tempat': tempat,
+      });
+
+      // Registration successful
+      setState(() {
+        // Update the UI as needed
+      });
+
+      // Navigate to the desired screen (e.g., home screen)
+      Navigator.pushReplacementNamed(context, '/pesanTiketSukses');
+    } on FirebaseAuthException catch (e) {
+      // Registration failed
+      setState(() {
+        print(e.code);
+      });
+    }
   }
 
   Future<void> init() async {
@@ -388,7 +434,8 @@ class _DetailTiketState extends State<DetailTiket> {
                         padding: EdgeInsets.only(left: 20),
                         child: Text(
                           'IDR ' +
-                              formatCurrency((int.parse(widget.event.biaya))* widget.jmlTiket.toInt()),
+                              formatCurrency((int.parse(widget.event.biaya)) *
+                                  widget.jmlTiket.toInt()),
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.left,
