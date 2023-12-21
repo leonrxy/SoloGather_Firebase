@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sologather/get_data/get_events_firebase.dart';
 import 'package:intl/intl.dart';
 import 'package:sologather/pages/pesanTiket.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PageDetailEvent extends StatefulWidget {
   const PageDetailEvent({super.key, required this.event});
@@ -17,8 +18,12 @@ class _PageDetailEventState extends State<PageDetailEvent> {
   List<Events> listEvent = [];
   bool isLoading = true;
   Repo repo = Repo();
-   static const LatLng _mapsUns = LatLng(-7.559489129813681, 110.85640195321398);
+  static const LatLng _mapsUns = LatLng(-7.559489129813681, 110.85640195321398);
 
+  late SharedPreferences _prefs;
+
+  // Step 1: Add a variable to track bookmark status
+  bool isBookmarked = false;
 
   @override
   void initState() {
@@ -28,6 +33,13 @@ class _PageDetailEventState extends State<PageDetailEvent> {
 
   Future<void> init() async {
     await getData();
+    // Step 2: Initialize SharedPreferences
+    _prefs = await SharedPreferences.getInstance();
+
+    // Step 3: Retrieve bookmark status from SharedPreferences
+    setState(() {
+      isBookmarked = _prefs.getBool(widget.event.id.toString()) ?? false;
+    });
   }
 
   Future<void> getData() async {
@@ -49,6 +61,14 @@ class _PageDetailEventState extends State<PageDetailEvent> {
       setState(() {
         isLoading = true;
       });
+    }
+  }
+
+  Future<void> _saveBookmarkStatus(bool isBookmarked) async {
+    if (isBookmarked == false) {
+      await _prefs.remove(widget.event.id.toString());
+    } else {
+      await _prefs.setBool(widget.event.id.toString(), isBookmarked);
     }
   }
 
@@ -103,10 +123,22 @@ class _PageDetailEventState extends State<PageDetailEvent> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Icon(
-                          Icons.bookmark_add_outlined,
-                          color: Colors.blue,
-                          size: 30,
+                        IconButton(
+                          icon: Icon(
+                            isBookmarked
+                                ? Icons.bookmark
+                                : Icons.bookmark_border_outlined,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isBookmarked = !isBookmarked;
+                            });
+
+                            // Step 6: Save bookmark status to SharedPreferences
+                            _saveBookmarkStatus(isBookmarked);
+                          },
                         ),
                       ],
                     ),

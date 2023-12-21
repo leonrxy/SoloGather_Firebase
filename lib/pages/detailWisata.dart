@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sologather/get_data/get_wisata_firebase.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PageDetailWisata extends StatefulWidget {
   const PageDetailWisata({super.key, required this.wisata});
@@ -16,6 +17,11 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
   bool isLoading = true;
   RepoWisata repo = RepoWisata();
 
+  late SharedPreferences _prefs;
+
+  // Step 1: Add a variable to track bookmark status
+  bool isBookmarked = false;
+
   @override
   void initState() {
     super.initState();
@@ -24,6 +30,12 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
 
   Future<void> init() async {
     await getData();
+    _prefs = await SharedPreferences.getInstance();
+
+    // Step 3: Retrieve bookmark status from SharedPreferences
+    setState(() {
+      isBookmarked = _prefs.getBool(widget.wisata.id.toString()) ?? false;
+    });
   }
 
   Future<void> getData() async {
@@ -45,6 +57,14 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
       setState(() {
         isLoading = true;
       });
+    }
+  }
+
+  Future<void> _saveBookmarkStatus(bool isBookmarked) async {
+    if (isBookmarked == false) {
+      await _prefs.remove(widget.wisata.id.toString());
+    } else {
+      await _prefs.setBool(widget.wisata.id.toString(), isBookmarked);
     }
   }
 
@@ -99,10 +119,22 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        Icon(
-                          Icons.bookmark_add_outlined,
-                          color: Colors.blue,
-                          size: 30,
+                        IconButton(
+                          icon: Icon(
+                            isBookmarked
+                                ? Icons.bookmark
+                                : Icons.bookmark_border_outlined,
+                            color: Colors.blue,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isBookmarked = !isBookmarked;
+                            });
+
+                            // Step 6: Save bookmark status to SharedPreferences
+                            _saveBookmarkStatus(isBookmarked);
+                          },
                         ),
                       ],
                     ),
