@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sologather/get_data/get_wisata_firebase.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+//import 'package:sologather/pages/pesanTiket.dart';
 
 class PageDetailWisata extends StatefulWidget {
   const PageDetailWisata({super.key, required this.wisata});
@@ -17,9 +19,11 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
   bool isLoading = true;
   RepoWisata repo = RepoWisata();
 
+  double latitude = 0;
+  double longitude = 0;
+
   late SharedPreferences _prefs;
 
-  // Step 1: Add a variable to track bookmark status
   bool isBookmarked = false;
 
   @override
@@ -36,6 +40,26 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
     setState(() {
       isBookmarked = _prefs.getBool(widget.wisata.id.toString()) ?? false;
     });
+  }
+
+  Future<LatLng> getLocation(String maps) async {
+    // Extract latitude and longitude using regular expression
+    RegExp regex = RegExp(r'@(-?\d+\.\d+),(-?\d+\.\d+)');
+    Match? match = regex.firstMatch(maps);
+
+    if (match != null) {
+      double latitude = double.parse(match.group(1)!);
+      double longitude = double.parse(match.group(2)!);
+
+      print('Latitude: $latitude');
+      print('Longitude: $longitude');
+
+      return LatLng(latitude, longitude);
+    } else {
+      print('Latitude and Longitude not found in the URL.');
+      // Return a default value or handle the error case
+      return LatLng(0, 0);
+    }
   }
 
   Future<void> getData() async {
@@ -281,6 +305,59 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
                     ),
                   ),
                 ),
+
+                Container(
+            height: 200,
+            child: FutureBuilder<LatLng>(
+              future: getLocation(widget.wisata.gmaps),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: snapshot.data ?? LatLng(0, 0),
+                      zoom: 13,
+                    ),
+                    markers: {
+                      Marker(
+                        markerId: MarkerId("source"),
+                        position: snapshot.data ?? LatLng(0, 0),
+                      )
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            child: TextButton(
+              onPressed: () {
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => PesanTiket(event: widget.wisata),
+                //   ),
+                // );
+              },
+              child: Text(
+                'Pesan Sekarang',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.blue,
+                padding:
+                    EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+              ),
+            ),
+          ),
               ],
             ),
           ),

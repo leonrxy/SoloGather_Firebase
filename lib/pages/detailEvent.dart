@@ -18,17 +18,37 @@ class _PageDetailEventState extends State<PageDetailEvent> {
   List<Events> listEvent = [];
   bool isLoading = true;
   Repo repo = Repo();
-  static const LatLng _mapsUns = LatLng(-7.559489129813681, 110.85640195321398);
+  double latitude = 0;
+  double longitude = 0;
 
   late SharedPreferences _prefs;
 
-  // Step 1: Add a variable to track bookmark status
   bool isBookmarked = false;
 
   @override
   void initState() {
     super.initState();
     init();
+  }
+
+  Future<LatLng> getLocation(String maps) async {
+    // Extract latitude and longitude using regular expression
+    RegExp regex = RegExp(r'@(-?\d+\.\d+),(-?\d+\.\d+)');
+    Match? match = regex.firstMatch(maps);
+
+    if (match != null) {
+      double latitude = double.parse(match.group(1)!);
+      double longitude = double.parse(match.group(2)!);
+
+      print('Latitude: $latitude');
+      print('Longitude: $longitude');
+
+      return LatLng(latitude, longitude);
+    } else {
+      print('Latitude and Longitude not found in the URL.');
+      // Return a default value or handle the error case
+      return LatLng(0, 0);
+    }
   }
 
   Future<void> init() async {
@@ -290,59 +310,56 @@ class _PageDetailEventState extends State<PageDetailEvent> {
           ),
           Container(
             height: 200,
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: _mapsUns,
-                zoom: 13,
+            child: FutureBuilder<LatLng>(
+              future: getLocation(widget.event.gmaps),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return GoogleMap(
+                    initialCameraPosition: CameraPosition(
+                      target: snapshot.data ?? LatLng(0, 0),
+                      zoom: 13,
+                    ),
+                    markers: {
+                      Marker(
+                        markerId: MarkerId("source"),
+                        position: snapshot.data ?? LatLng(0, 0),
+                      )
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+            child: TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PesanTiket(event: widget.event),
+                  ),
+                );
+              },
+              child: Text(
+                'Pesan Sekarang',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.blue,
+                padding:
+                    EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
               ),
             ),
           ),
-
-          Container(
-              margin: EdgeInsets.only(top: 10),
-              padding:
-                  EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-              child: TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => PesanTiket(event: widget.event),
-                    ),
-                  );
-                },
-                child: Text(
-                  'Pesan Sekarang',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                  ),
-                ),
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding:
-                      EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
-                ),
-              )),
-          // Container(
-          //   height: 200,
-          //   child: GoogleMap(
-          //     onMapCreated: (controller) {
-          //       _controller = controller;
-          //     },
-          //     initialCameraPosition: CameraPosition(
-          //       target: LatLng(widget.event.latitude, widget.event.longitude),
-          //       zoom: 15,
-          //     ),
-          //     markers: {
-          //       Marker(
-          //         markerId: MarkerId('event_location'),
-          //         position:
-          //             LatLng(widget.event.latitude, widget.event.longitude),
-          //       ),
-          //     },
-          //   ),
-          // ),
         ],
       ),
     );

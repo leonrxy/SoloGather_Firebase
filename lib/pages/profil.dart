@@ -39,7 +39,7 @@ class _ProfilState extends State<Profil> {
     final prefs = await SharedPreferences.getInstance();
     email = prefs.getString('userEmail') ?? '';
     print('Email' + email);
-    name = (await LoginSession.getNameFromEmail(email)) ?? '';
+    name = prefs.getString('userName') ?? '';
     print('Name' + name);
   }
 
