@@ -25,6 +25,7 @@ import 'package:sologather/pages/admin/addEvents.dart';
 import 'package:sologather/pages/profilku.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:line_icons/line_icons.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,6 +48,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _showSplash = true;
+  bool isAdmin = false;
 
   @override
   void initState() {
@@ -58,12 +60,34 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> getProfil() async {
+    final prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('userEmail') ?? '';
+    print('Email' + email);
+    if (email == 'admin@sg.com') {
+      isAdmin = true;
+    } else {
+      isAdmin = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: _showSplash ? SplashScreenKu() : NavigationBar(),
+      home: _showSplash
+          ? SplashScreenKu()
+          : FutureBuilder(
+              future: getProfil(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return NavigationBar(isAdmin: isAdmin);
+                } else {
+                  return SplashScreenKu(); // Show loading indicator or another widget while waiting
+                }
+              },
+            ),
       routes: {
-        '/home': (context) => NavigationBar(),
+        '/home': (context) => NavigationBar(isAdmin: isAdmin),
         '/splash': (context) => SplashScreenKu(),
         '/profil': (context) => Profil(),
         '/event': (context) => PageEvent(),
@@ -88,7 +112,9 @@ class _MyAppState extends State<MyApp> {
 }
 
 class NavigationBar extends StatefulWidget {
-  const NavigationBar({Key? key});
+  const NavigationBar({super.key, required this.isAdmin});
+
+  final bool isAdmin;
 
   @override
   State<NavigationBar> createState() => _NavigationBarState();
@@ -101,21 +127,29 @@ class _NavigationBarState extends State<NavigationBar>
   String name = '';
   bool statusLogin = false;
   List<Widget> _widgetOptions = <Widget>[];
-  List<BottomNavigationBarItem> _bottomNavBarItems =
-      <BottomNavigationBarItem>[];
+  List bottomNavBarItems = [];
+  List<GButton> _bottomNavBarItems = <GButton>[];
 
   @override
   void initState() {
     super.initState();
-    setNavbar();
+    cekAdmin();
+    setNavbar(widget.isAdmin);
   }
 
-  Future<void> getProfil() async {
+  Future cekAdmin() async {
     final prefs = await SharedPreferences.getInstance();
     email = prefs.getString('userEmail') ?? '';
     print('Email' + email);
     name = await getNameFromEmail(email) ?? '';
     print('Name' + name);
+    bool isAdmin = false;
+    if (email == 'admin@sg.com') {
+      isAdmin = true;
+    } else {
+      isAdmin = false;
+    }
+    return isAdmin;
   }
 
   Future<String?> getNameFromEmail(String email) async {
@@ -144,58 +178,65 @@ class _NavigationBarState extends State<NavigationBar>
     }
   }
 
-  setNavbar() {
-    getProfil();
-    print('Emailku: ' + email);
-    _widgetOptions = <Widget>[
-      Home(
-        goPageEvent: () {
-          setState(() {
-            _selectedIndex = 1;
-          });
-        },
-        goPageWisata: () {
-          setState(() {
-            _selectedIndex = 2;
-          });
-        },
-      ),
-      PageEvent(),
-      Wisata(),
-      Profil(),
-    ];
-
-    _bottomNavBarItems = <BottomNavigationBarItem>[
-      BottomNavigationBarItem(
-        icon: Icon(Icons.home),
-        label: 'Beranda',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.event_available_rounded),
-        label: 'Event',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.location_city_rounded),
-        label: 'Wisata',
-      ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.person_2_rounded),
-        label: 'Profil',
-      ),
-    ];
-
-    if (email == 'admin@sg.com') {
-      print('LOGIN SEBAGAI ADMIN');
-      _widgetOptions.add(PageAdmin());
-      _bottomNavBarItems.add(
-        BottomNavigationBarItem(
-          icon: Icon(Icons.admin_panel_settings_rounded),
-          label: 'Admin',
+  void setNavbar(bool isAdmin) {
+    setState(() {
+      _widgetOptions = <Widget>[
+        Home(
+          goPageEvent: () {
+            setState(() {
+              _selectedIndex = 1;
+            });
+          },
+          goPageWisata: () {
+            setState(() {
+              _selectedIndex = 2;
+            });
+          },
         ),
-      );
-    } else {
-      print('BUKAN ADMIN');
-    }
+        PageEvent(),
+        Wisata(),
+        Profil(),
+      ];
+
+      bottomNavBarItems = [
+        {
+          'icon': LineIcons.home,
+          'label': 'Beranda',
+        },
+        {
+          'icon': LineIcons.calendar,
+          'label': 'Event',
+        },
+        {
+          'icon': LineIcons.map,
+          'label': 'Wisata',
+        },
+        {
+          'icon': LineIcons.user,
+          'label': 'Profil',
+        },
+      ];
+
+      if (isAdmin == true) {
+        print('LOGIN SEBAGAI ADMIN');
+        _widgetOptions.add(PageAdmin());
+        bottomNavBarItems.add(
+          {
+            'icon': LineIcons.userShield,
+            'label': 'Admin',
+          },
+        );
+      } else {
+        print('BUKAN ADMIN');
+      }
+
+      _bottomNavBarItems = bottomNavBarItems.map((item) {
+        return GButton(
+          icon: item['icon']!,
+          text: item['label']!,
+        );
+      }).toList();
+    });
   }
 
   void _onItemTapped(int index) {
@@ -213,20 +254,35 @@ class _NavigationBarState extends State<NavigationBar>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        //controller: _tabController,
-        children: _widgetOptions,
-        index: _selectedIndex,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: _bottomNavBarItems,
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue[800],
-        onTap: _onItemTapped,
-        selectedFontSize: 14.0,
-        unselectedFontSize: 14.0,
-        type: BottomNavigationBarType.fixed, // addded line
-      ),
-    );
+        body: IndexedStack(
+          //controller: _tabController,
+          children: _widgetOptions,
+          index: _selectedIndex,
+        ),
+        bottomNavigationBar: GNav(
+          //rippleColor: Color(Colors.blue), // tab button ripple color when pressed
+          //hoverColor: Colors.grey[700], // tab button hover color
+          backgroundColor: Colors.white,
+          color: Colors.grey,
+          activeColor: Colors.white,
+          //tabBackgroundColor: Colors.lightBlueAccent.shade200,
+          padding: widget.isAdmin
+              ? EdgeInsets.symmetric(horizontal: 10, vertical: 20)
+              : EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          onTabChange: (index) {
+            print(index);
+            _changeNavigationIndex(index);
+          },
+          tabBackgroundGradient: LinearGradient(
+            colors: [Colors.blue.shade500, Colors.lightBlueAccent.shade100],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          gap: 8,
+          tabMargin: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
+          tabBorderRadius: 18,
+          haptic: false,
+          tabs: _bottomNavBarItems,
+        ));
   }
 }
