@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sologather/get_data/get_events_firebase.dart';
 import 'package:intl/intl.dart';
+import 'package:sologather/pages/pesanTiket.dart';
 
 class PageDetailEvent extends StatefulWidget {
   const PageDetailEvent({super.key, required this.event});
@@ -15,6 +17,8 @@ class _PageDetailEventState extends State<PageDetailEvent> {
   List<Events> listEvent = [];
   bool isLoading = true;
   Repo repo = Repo();
+   static const LatLng _mapsUns = LatLng(-7.559489129813681, 110.85640195321398);
+
 
   @override
   void initState() {
@@ -252,6 +256,42 @@ class _PageDetailEventState extends State<PageDetailEvent> {
               ],
             ),
           ),
+          Container(
+            height: 200,
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: _mapsUns,
+                zoom: 13,
+              ),
+            ),
+          ),
+
+          Container(
+              margin: EdgeInsets.only(top: 10),
+              padding:
+                  EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PesanTiket(event: widget.event),
+                    ),
+                  );
+                },
+                child: Text(
+                  'Pesan Sekarang',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  padding:
+                      EdgeInsets.only(top: 10, bottom: 10, left: 15, right: 15),
+                ),
+              )),
           // Container(
           //   height: 200,
           //   child: GoogleMap(

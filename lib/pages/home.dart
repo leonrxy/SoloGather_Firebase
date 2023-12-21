@@ -293,13 +293,14 @@ class _HomeState extends State<Home> {
                     shrinkWrap: true,
                     itemCount: min(listEvent.length, 7),
                     itemBuilder: (BuildContext context, int index) {
+                      Events dataEvent = listEvent[index];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  PageDetailEvent(event: listEvent[index]),
+                                  PageDetailEvent(event: dataEvent),
                             ),
                           );
                         },
@@ -460,13 +461,14 @@ class _HomeState extends State<Home> {
                     shrinkWrap: true,
                     itemCount: min(listWisata.length, 7),
                     itemBuilder: (BuildContext context, int index) {
+                      DataWisata dataWisata = listWisata[index];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  PageDetailWisata(wisata: listWisata[index]),
+                                  PageDetailWisata(wisata: dataWisata),
                             ),
                           );
                         },

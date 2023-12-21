@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:sologather/get_data/loginSession.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sologather/pages/addWisata.dart';
@@ -9,7 +10,6 @@ import 'package:sologather/pages/informasi.dart';
 import 'package:sologather/pages/kritiksaran.dart';
 import 'package:sologather/pages/logout.dart';
 import 'package:sologather/pages/pengaturan.dart';
-import 'package:sologather/pages/pesanTiket.dart';
 import 'package:sologather/pages/petaWisata.dart';
 import 'package:sologather/pages/tentang.dart';
 import 'package:sologather/splashscreen.dart';
@@ -26,6 +26,7 @@ import 'package:sologather/pages/profilku.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await initializeDateFormatting('id', null);
   runApp(
     ChangeNotifierProvider(
       create: (context) => LoginSession(),
@@ -77,7 +78,6 @@ class _MyAppState extends State<MyApp> {
         '/addEvents': (context) => EventsForm(),
         '/addWisata': (context) => WisataForm(),
         '/profilku': (context) => Profilku(),
-        '/pesanTiket': (context) => PesanTiket(),
       },
     );
   }
