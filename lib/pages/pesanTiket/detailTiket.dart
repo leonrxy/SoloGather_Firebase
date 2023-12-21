@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sologather/get_data/get_events_firebase.dart';
+import 'package:sologather/pages/pesanTiket/pesanTiketSukses.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
-import 'package:input_quantity/input_quantity.dart';
 
 class DetailTiket extends StatefulWidget {
   const DetailTiket(
@@ -29,10 +29,13 @@ class _DetailTiketState extends State<DetailTiket> {
   String _dateCount = '';
   String _range = '';
   String _rangeCount = '';
+  String email = '';
+  String name = '';
 
   void initState() {
     super.initState();
     init();
+    getProfil();
   }
 
   Future<void> init() async {
@@ -71,6 +74,12 @@ class _DetailTiketState extends State<DetailTiket> {
     return formattedTime;
   }
 
+  String formatCurrency(int amount) {
+    final formatter = NumberFormat("#,###");
+
+    return formatter.format(amount);
+  }
+
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
     setState(() {
       if (args.value is PickerDateRange) {
@@ -88,6 +97,14 @@ class _DetailTiketState extends State<DetailTiket> {
     });
   }
 
+  Future<void> getProfil() async {
+    final prefs = await SharedPreferences.getInstance();
+    email = prefs.getString('userEmail') ?? '';
+    print('Email' + email);
+    name = prefs.getString('userName') ?? '';
+    print('Name' + name);
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -102,7 +119,12 @@ class _DetailTiketState extends State<DetailTiket> {
             ),
           ),
           backgroundColor: Colors.white,
-          leading: BackButton(color: Colors.black),
+          leading: BackButton(
+            color: Colors.black,
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
         ),
         backgroundColor: Colors.grey[200],
         body: ListView(
@@ -111,7 +133,7 @@ class _DetailTiketState extends State<DetailTiket> {
                 color: Colors.white,
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                 margin: const EdgeInsets.fromLTRB(0, 0, 0, 7),
-                height: 300,
+                height: 350,
                 child: ListView(
                   children: [
                     Container(
@@ -142,9 +164,18 @@ class _DetailTiketState extends State<DetailTiket> {
                         ],
                       ),
                     ),
+                    Divider(
+                      color: Colors
+                          .grey, // Sesuaikan warna garis pembatas sesuai kebutuhan
+                      height:
+                          20, // Sesuaikan ketinggian garis pembatas sesuai kebutuhan
+                      thickness:
+                          1, // Sesuaikan ketebalan garis pembatas sesuai kebutuhan
+                    ),
                     Container(
                       padding: EdgeInsets.only(),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Jumlah Tiket',
@@ -163,6 +194,14 @@ class _DetailTiketState extends State<DetailTiket> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    Divider(
+                      color: Colors
+                          .grey, // Sesuaikan warna garis pembatas sesuai kebutuhan
+                      height:
+                          20, // Sesuaikan ketinggian garis pembatas sesuai kebutuhan
+                      thickness:
+                          1, // Sesuaikan ketebalan garis pembatas sesuai kebutuhan
+                    ),
                     Container(
                       padding: EdgeInsets.only(),
                       child: Text(
@@ -176,9 +215,126 @@ class _DetailTiketState extends State<DetailTiket> {
                     Text(
                       widget.date,
                       style: TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.normal),
+                          fontSize: 18, fontWeight: FontWeight.normal),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
+                    ),
+                    Divider(
+                      color: Colors
+                          .grey, // Sesuaikan warna garis pembatas sesuai kebutuhan
+                      height:
+                          20, // Sesuaikan ketinggian garis pembatas sesuai kebutuhan
+                      thickness:
+                          1, // Sesuaikan ketebalan garis pembatas sesuai kebutuhan
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Icon(
+                                Icons.flash_on,
+                                size: 30,
+                                color: Colors
+                                    .grey, // Sesuaikan warna ikon sesuai kebutuhan
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Konfirmasi instan',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Tidak perlu reservasi',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Icon(
+                                Icons.money_off,
+                                size: 30,
+                                color: Colors
+                                    .grey, // Sesuaikan warna ikon sesuai kebutuhan
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Tidak bisa refund',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      child: Row(
+                        children: [
+                          Container(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Icon(
+                                Icons.hourglass_bottom,
+                                size: 30,
+                                color: Colors
+                                    .grey, // Sesuaikan warna ikon sesuai kebutuhan
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Berlaku di tanggal dipilih',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 )),
@@ -197,20 +353,23 @@ class _DetailTiketState extends State<DetailTiket> {
                     ),
                   ),
                   Container(
-                      child: Column(
-                    children: [
-                      Text(
-                        'Nama',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w400),
-                      ),
-                      Text(
-                        'Email',
-                        style: TextStyle(
-                            fontSize: 17, fontWeight: FontWeight.w400),
-                      ),
-                    ],
-                  )),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Nama : ' + name,
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w400),
+                        ),
+                        Text(
+                          'Email : ' + email,
+                          style: TextStyle(
+                              fontSize: 17, fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -228,7 +387,8 @@ class _DetailTiketState extends State<DetailTiket> {
                       Container(
                         padding: EdgeInsets.only(left: 20),
                         child: Text(
-                          'IDR ' + widget.event.biaya,
+                          'IDR ' +
+                              formatCurrency((int.parse(widget.event.biaya))* widget.jmlTiket.toInt()),
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.left,
@@ -238,7 +398,14 @@ class _DetailTiketState extends State<DetailTiket> {
                       Container(
                         padding: EdgeInsets.only(left: 10, right: 10),
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => PesanTiketSukses(),
+                              ),
+                            );
+                          },
                           child: Text(
                             'Lanjutkan Pembayaran',
                             style: TextStyle(fontSize: 16, color: Colors.white),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sologather/get_data/get_events_firebase.dart';
-import 'package:sologather/pages/detailTiket.dart';
+import 'package:sologather/pages/pesanTiket/detailTiket.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart';
 import 'package:input_quantity/input_quantity.dart';
@@ -24,7 +24,7 @@ class _PesanTiketState extends State<PesanTiket> {
   String _dateCount = '';
   String _range = '';
   String _rangeCount = '';
-  double jmlTiket = 1;
+  int jmlTiket = 1;
 
   void initState() {
     super.initState();
@@ -65,6 +65,12 @@ class _PesanTiketState extends State<PesanTiket> {
     String formattedTime = DateFormat.Hm().format(parsedTime);
 
     return formattedTime;
+  }
+
+  String formatCurrency(int amount) {
+    final formatter = NumberFormat("#,###");
+
+    return formatter.format(amount);
   }
 
   void _onSelectionChanged(DateRangePickerSelectionChangedArgs args) {
@@ -114,6 +120,7 @@ class _PesanTiketState extends State<PesanTiket> {
                 initialSelectedRange: PickerDateRange(
                     DateTime.now().subtract(const Duration(days: 4)),
                     DateTime.now().add(const Duration(days: 3))),
+                    minDate: DateTime.now(),
               ),
             ),
             Container(
@@ -158,8 +165,9 @@ class _PesanTiketState extends State<PesanTiket> {
                           minVal: 1,
                           steps: 1,
                           onQtyChanged: (val) {
-                            jmlTiket = val;
-                            print(val);
+                            setState(() {
+                              jmlTiket = val.toInt();
+                            });
                           },
                         ),
                       ),
@@ -168,7 +176,7 @@ class _PesanTiketState extends State<PesanTiket> {
                   Container(
                     padding: EdgeInsets.only(left: 20),
                     child: Text(
-                      'IDR ' + widget.event.biaya,
+                      'IDR ' + formatCurrency((int.parse(widget.event.biaya))*jmlTiket.toInt()),
                       style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w500,

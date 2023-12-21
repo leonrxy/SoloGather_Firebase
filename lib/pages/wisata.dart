@@ -3,6 +3,7 @@ import 'package:sologather/get_data/get_wisata_firebase.dart';
 import 'package:sologather/pages/detailWisata.dart';
 import 'package:sologather/widgets/shimmer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class Wisata extends StatefulWidget {
   const Wisata({Key? key}) : super(key: key);
@@ -46,6 +47,16 @@ class _WisataState extends State<Wisata> {
         isLoading = true;
       });
     }
+  }
+
+  String formatTime(String time) {
+    // Parse the time string to DateTime
+    DateTime parsedTime = DateTime.parse("2023-01-01 " + time);
+
+    // Format the DateTime to the desired time format
+    String formattedTime = DateFormat.Hm().format(parsedTime);
+
+    return formattedTime;
   }
 
   @override
@@ -188,7 +199,7 @@ class _WisataState extends State<Wisata> {
                                               width: 5,
                                             ),
                                             Text(
-                                              data.jam_buka,
+                                              '${formatTime(listWisata[index].jam_buka)} - ${formatTime(listWisata[index].jam_tutup)}',
                                               style: TextStyle(
                                                 color: Colors.grey[600],
                                                 fontSize: 13,

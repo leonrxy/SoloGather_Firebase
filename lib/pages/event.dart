@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sologather/get_data/get_events_firebase.dart';
 import 'package:sologather/pages/detailEvent.dart';
 import 'package:sologather/widgets/shimmer.dart';
+import 'package:intl/intl.dart';
 
 class PageEvent extends StatefulWidget {
   const PageEvent({super.key});
@@ -45,6 +46,16 @@ class _PageEventState extends State<PageEvent> {
         isLoading = true;
       });
     }
+  }
+
+  String formatTime(String time) {
+    // Parse the time string to DateTime
+    DateTime parsedTime = DateTime.parse("2023-01-01 " + time);
+
+    // Format the DateTime to the desired time format
+    String formattedTime = DateFormat.Hm().format(parsedTime);
+
+    return formattedTime;
   }
 
   @override
@@ -193,7 +204,7 @@ class _PageEventState extends State<PageEvent> {
                                                   width: 5,
                                                 ),
                                                 Text(
-                                                  listEvent[index].jam_mulai,
+                                                  '${formatTime(listEvent[index].jam_mulai)} - ${formatTime(listEvent[index].jam_selesai)}',
                                                   style: TextStyle(
                                                     color: Colors.grey[600],
                                                     fontSize: 13,

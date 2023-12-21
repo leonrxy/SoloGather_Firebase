@@ -6,6 +6,7 @@ import 'package:sologather/get_data/get_banner.dart';
 import 'package:sologather/get_data/get_wisata_firebase.dart';
 import 'package:sologather/pages/detailEvent.dart';
 import 'package:sologather/pages/detailWisata.dart';
+import 'package:sologather/pages/searchPage.dart';
 import 'package:sologather/widgets/shimmer.dart';
 import 'package:flutter_image_slideshow/flutter_image_slideshow.dart';
 import 'package:intl/intl.dart';
@@ -28,6 +29,8 @@ class _HomeState extends State<Home> {
   Repo repo = Repo();
   RepoBanner repoBanner = RepoBanner();
   RepoWisata repoWisata = RepoWisata();
+
+  TextEditingController searchController = TextEditingController();
 
   Widget appLogo = Container(
     padding: const EdgeInsets.all(4.0),
@@ -60,6 +63,12 @@ class _HomeState extends State<Home> {
       List<Events> event = await repo.getData();
       List<AppBanner> banner = await repoBanner.getData();
       List<DataWisata> wisata = await repoWisata.getData();
+      List<Events> filteredEvents = listEvent
+          .where((event) => event.nama
+              .toLowerCase()
+              .contains(searchController.text.toLowerCase()))
+          .toList();
+
       if (mounted) {
         // Pastikan widget masih ada sebelum memanggil setState
         setState(() {
@@ -124,9 +133,20 @@ class _HomeState extends State<Home> {
                       size: 28,
                     ),
                     title: TextField(
-                      onChanged: (query) {},
+                      controller: searchController,
+                      onEditingComplete: () {
+                        // Handle onEditingComplete event
+                        // Navigasi ke halaman pencarian hasil dengan membawa data hasil pencarian
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SearchResultsPage(
+                                search: searchController.text),
+                          ),
+                        );
+                      },
                       decoration: InputDecoration(
-                        hintText: 'Cari Event',
+                        hintText: 'Cari Event dan Wisata',
                         hintStyle: TextStyle(
                           color: Colors.grey,
                           fontSize: 18,

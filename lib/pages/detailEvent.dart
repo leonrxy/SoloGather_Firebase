@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sologather/get_data/get_events_firebase.dart';
 import 'package:intl/intl.dart';
-import 'package:sologather/pages/pesanTiket.dart';
+import 'package:sologather/pages/pesanTiket/pesanTiket.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PageDetailEvent extends StatefulWidget {
