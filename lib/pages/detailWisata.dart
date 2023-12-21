@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:sologather/get_data/get_wisata_firebase.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-//import 'package:sologather/pages/pesanTiket.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class PageDetailWisata extends StatefulWidget {
   const PageDetailWisata({super.key, required this.wisata});
@@ -273,6 +273,65 @@ class _PageDetailWisataState extends State<PageDetailWisata> {
                   ),
                 ],
               ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10),
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding:
+                      EdgeInsets.only(top: 10, bottom: 4, left: 15, right: 15),
+                  child: Text(
+                    'Beri rating tempat wisata ini',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Sampaikan pendapat Anda tentang pengalaman Anda di tempat wisata ini!',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(15),
+                  child: RatingBar.builder(
+                    initialRating: 0,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 18.0),
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.blue,
+                    ),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                    },
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  child: Text(
+                    'Tulis ulasan anda',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           Container(

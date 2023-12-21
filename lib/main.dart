@@ -12,6 +12,7 @@ import 'package:sologather/pages/auth/logout.dart';
 import 'package:sologather/pages/pengaturan.dart';
 import 'package:sologather/pages/petaWisata.dart';
 import 'package:sologather/pages/tentang.dart';
+import 'package:sologather/pages/tiketSaya.dart';
 import 'package:sologather/splashscreen.dart';
 import 'package:sologather/pages/home.dart';
 import 'package:sologather/pages/profil.dart';
@@ -23,6 +24,7 @@ import 'package:sologather/pages/favoritku.dart';
 import 'package:sologather/pages/admin/addEvents.dart';
 import 'package:sologather/pages/profilku.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -79,6 +81,7 @@ class _MyAppState extends State<MyApp> {
         '/addEvents': (context) => EventsForm(),
         '/addWisata': (context) => WisataForm(),
         '/profilku': (context) => Profilku(),
+        '/tiketSaya': (context) => TiketSaya(),
       },
     );
   }

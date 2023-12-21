@@ -104,7 +104,11 @@ class _PesanTiketState extends State<PesanTiket> {
             ),
           ),
           backgroundColor: Colors.white,
-          leading: BackButton(color: Colors.black),
+          leading: BackButton(
+              color: Colors.black,
+              onPressed: () {
+                Navigator.of(context).pop();
+              }),
         ),
         backgroundColor: Colors.grey[200],
         body: ListView(
@@ -120,7 +124,8 @@ class _PesanTiketState extends State<PesanTiket> {
                 initialSelectedRange: PickerDateRange(
                     DateTime.now().subtract(const Duration(days: 4)),
                     DateTime.now().add(const Duration(days: 3))),
-                    minDate: DateTime.now(),
+                minDate: DateTime.now(),
+                initialSelectedDate: DateTime.now(),
               ),
             ),
             Container(
@@ -176,7 +181,9 @@ class _PesanTiketState extends State<PesanTiket> {
                   Container(
                     padding: EdgeInsets.only(left: 20),
                     child: Text(
-                      'IDR ' + formatCurrency((int.parse(widget.event.biaya))*jmlTiket.toInt()),
+                      'IDR ' +
+                          formatCurrency((int.parse(widget.event.biaya)) *
+                              jmlTiket.toInt()),
                       style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w500,

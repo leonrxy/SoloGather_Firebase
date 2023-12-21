@@ -130,7 +130,7 @@ class _HomeState extends State<Home> {
                     leading: Icon(
                       Icons.search,
                       color: Colors.blue,
-                      size: 28,
+                      size: 30,
                     ),
                     title: TextField(
                       controller: searchController,
@@ -164,6 +164,7 @@ class _HomeState extends State<Home> {
                   SearchBar = Icon(
                     Icons.search_rounded,
                     color: Colors.blue,
+                    size: 30,
                   );
                   appLogo = Container(
                     padding: const EdgeInsets.all(4.0),

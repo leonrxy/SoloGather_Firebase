@@ -1,7 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Profilku extends StatelessWidget {
+class Profilku extends StatefulWidget {
   const Profilku({Key? key});
+
+  @override
+  State<Profilku> createState() => _ProfilkuState();
+}
+
+class _ProfilkuState extends State<Profilku> {
+  String nama = '';
+  String email = '';
+  String alamat = '';
+  String no_hp = '';
+  String userUid = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getData();
+  }
+
+  void getData() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      userUid = prefs.getString('userUid') ?? '';
+      print('UID : ' + userUid);
+
+      // Inisialisasi Firestore
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Mendapatkan referensi dokumen pengguna berdasarkan ID pengguna (ganti dengan ID pengguna yang sesuai)
+      DocumentReference userDocument =
+          firestore.collection('users').doc(userUid);
+
+      // Mendapatkan data dari Firestore
+      DocumentSnapshot documentSnapshot = await userDocument.get();
+
+      // Mengupdate state dengan data yang diambil dari Firestore
+      setState(() {
+        // Check if the fields exist before accessing them
+        nama =
+            documentSnapshot['name'] != null ? documentSnapshot['name'] : '-';
+        email =
+            documentSnapshot['email'] != null ? documentSnapshot['email'] : '-';
+        documentSnapshot['alamat'] != null
+            ? alamat = documentSnapshot['alamat']
+            : '-';
+        documentSnapshot['no_hp'] != null ? no_hp = documentSnapshot['no_hp'] : '-';
+      });
+    } catch (e) {
+      print('Error fetching data from Firestore: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,17 +64,18 @@ class Profilku extends StatelessWidget {
           style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Colors.white,
           ),
         ),
-        backgroundColor: Color.fromARGB(255, 0, 85, 255),
+        leading: BackButton(color: Colors.white),
+        backgroundColor: Colors.blue[600],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 0, 85, 255),
+                color: Colors.blue[600],
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(45),
                   bottomRight: Radius.circular(45),
@@ -48,13 +101,13 @@ class Profilku extends StatelessWidget {
               ),
             ),
             SizedBox(height: 30),
-            buildBiodataRow(Icons.person, 'Nama Lengkap', 'Riski Adi'),
+            buildBiodataRow(Icons.person, 'Nama Lengkap', nama),
             buildDivider(),
-            buildBiodataRow(Icons.email, 'Email', 'admin@sg.com'),
+            buildBiodataRow(Icons.email, 'Email', email),
             buildDivider(),
-            buildBiodataRow(Icons.location_on, 'Alamat', 'Surakarta'),
+            buildBiodataRow(Icons.location_on, 'Alamat', alamat),
             buildDivider(),
-            buildBiodataRow(Icons.phone, 'Phone', '08988888888'),
+            buildBiodataRow(Icons.phone, 'Phone', no_hp),
             buildDivider(),
           ],
         ),

@@ -54,6 +54,11 @@ class _ProfilState extends State<Profil> {
                   'route': '/favoritku'
                 },
                 {
+                  'name': 'Tiket Saya',
+                  'icon': Icons.event,
+                  'route': '/tiketSaya'
+                },
+                {
                   'name': 'Pengaturan',
                   'icon': Icons.settings,
                   'route': '/pengaturan'
@@ -131,7 +136,7 @@ class _ProfilState extends State<Profil> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: Container(
-            height: statusLogin ? 535 : 360,
+            height: statusLogin ? 605 : 360,
             color: Colors.white,
             child: Column(
               children: [

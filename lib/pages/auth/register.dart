@@ -20,6 +20,7 @@ class _RegisterState extends State<Register> {
   String email = '';
   String password = '';
   String name = '';
+  String no_hp = '';
 
   void _toggle() {
     setState(() {
@@ -45,9 +46,12 @@ class _RegisterState extends State<Register> {
           .collection('users')
           .doc(userCredential.user!.uid)
           .set({
-        'name': name, // replace with the actual name
+        'name': name,
         'email': email,
-        'birthdate': dateinput.text, // replace with the actual birthdate
+        'birthdate': dateinput.text,
+        'no_hp': no_hp,
+        'alamat': '-',
+        'photo': '-',
       });
 
       // Registration successful
@@ -140,6 +144,27 @@ class _RegisterState extends State<Register> {
                       email = value;
                     },
                     keyboardType: TextInputType.emailAddress,
+                  ),
+                ),
+                SizedBox(height: 16),
+                Container(
+                  width: 400,
+                  height: 50,
+                  child: TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'No. HP',
+                      border: OutlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value!.isEmpty && clickButton) {
+                        return 'No. HP harus diisi';
+                      }
+                      return null;
+                    },
+                    onChanged: (value) {
+                      no_hp = value;
+                    },
+                    keyboardType: TextInputType.phone,
                   ),
                 ),
                 SizedBox(height: 16),

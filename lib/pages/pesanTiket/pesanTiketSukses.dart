@@ -18,8 +18,33 @@ class PesanTiketSukses extends StatelessWidget {
                     width: 200,
                   ),
                 ),
-                Text('Yey, kamu berhasil memesan tiket!'),
-                Text('Tiket kamu sudah dikirim ke email kamu'),
+                Container(
+                  margin: EdgeInsets.only(top: 30),
+                  child: Text('Yey, kamu berhasil memesan tiket!',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ),
+                Text('Tiket kamu sudah dikirim ke email kamu',
+                    style: TextStyle(fontSize: 16)),
+                Container(
+                  margin: EdgeInsets.only(top: 30),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/tiketSaya');
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue[600],
+                      padding: EdgeInsets.symmetric(horizontal: 30),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                    ),
+                    child: Text('Lihat Tiket Saya',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
+                  ),
+                ),
               ],
             ),
           )),

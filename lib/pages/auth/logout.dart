@@ -18,6 +18,9 @@ class _LogoutState extends State<Logout> {
 
   Future<void> clearLoginStatus() async {
     prefs.setBool('isLogin', false);
+    prefs.setString('userEmail', '');
+    prefs.setString('userName', '');
+    prefs.setString('userUid', '');
   }
 
   @override
