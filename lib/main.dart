@@ -268,7 +268,7 @@ class _NavigationBarState extends State<NavigationBar>
           color: Colors.grey,
           activeColor: Colors.white,
           //tabBackgroundColor: Colors.lightBlueAccent.shade200,
-          padding: widget.isAdmin
+          padding: isAdmin
               ? EdgeInsets.symmetric(horizontal: 10, vertical: 20)
               : EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           onTabChange: (index) {

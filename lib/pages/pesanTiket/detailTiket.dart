@@ -34,6 +34,7 @@ class _DetailTiketState extends State<DetailTiket> {
   String email = '';
   String name = '';
   String harga = '';
+  String foto = '';
   String jmlTiket = '';
   String tanggal = '';
   String jam_mulai = '';
@@ -47,7 +48,7 @@ class _DetailTiketState extends State<DetailTiket> {
     getProfil();
   }
 
-  startRegistration() async {
+  beliTiket() async {
     try {
       harga = widget.event.biaya * widget.jmlTiket.toInt();
       jmlTiket = widget.jmlTiket.toString();
@@ -55,6 +56,7 @@ class _DetailTiketState extends State<DetailTiket> {
       jam_mulai = widget.event.jam_mulai;
       jam_selesai = widget.event.jam_selesai;
       tempat = widget.event.tempat;
+      foto = widget.event.foto;
       await FirebaseFirestore.instance
           .collection('tiket')
           .doc(_auth.currentUser!.uid)
@@ -62,6 +64,7 @@ class _DetailTiketState extends State<DetailTiket> {
         'email': email,
         'nama': name,
         'harga': harga,
+        'foto': foto,
         'jmlTiket': jmlTiket,
         'tanggal': tanggal,
         'jam_mulai': jam_mulai,

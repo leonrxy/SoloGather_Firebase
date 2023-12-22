@@ -93,12 +93,12 @@ class _TiketSayaState extends State<TiketSaya> {
                   DataTiket data = listTiket[index];
                   return InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PageDetailTiket(tiket: data),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => PageDetailTiket(tiket: data),
+                      //   ),
+                      // );
                     },
                     child: Card(
                       elevation: 3,

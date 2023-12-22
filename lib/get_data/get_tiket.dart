@@ -5,6 +5,7 @@ class DataTiket {
   final String email;
   final String nama;
   final String harga;
+  final String foto;
   final String jmlTiket;
   final String tanggal;
   final String jam_mulai;
@@ -16,6 +17,7 @@ class DataTiket {
     required this.email,
     required this.nama,
     required this.harga,
+    required this.foto,
     required this.jmlTiket,
     required this.tanggal,
     required this.jam_mulai,
@@ -34,6 +36,7 @@ class DataTiket {
       nama: data['nama'],
       email: data['email'],
       harga: data['harga'],
+      foto: data['foto'],
       jmlTiket: data['jmlTiket'],
       tanggal: data['tanggal'],
       jam_mulai: data['jam_mulai'],

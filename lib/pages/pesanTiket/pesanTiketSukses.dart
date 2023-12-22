@@ -30,7 +30,7 @@ class PesanTiketSukses extends StatelessWidget {
                   margin: EdgeInsets.only(top: 30),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/tiketSaya');
+                      Navigator.pushReplacementNamed(context, '/home');
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.blue[600],
@@ -38,7 +38,7 @@ class PesanTiketSukses extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
                     ),
-                    child: Text('Lihat Tiket Saya',
+                    child: Text('Kembali ke Home',
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
