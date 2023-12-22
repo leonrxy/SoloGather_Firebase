@@ -30,7 +30,7 @@ class PesanTiketSukses extends StatelessWidget {
                   margin: EdgeInsets.only(top: 30),
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pushReplacementNamed(context, '/home');
+                      Navigator.pushNamed(context, '/home');
                     },
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.blue[600],
